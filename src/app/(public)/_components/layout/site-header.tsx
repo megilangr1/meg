@@ -16,18 +16,11 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/brand/logo-icon.png"
-            alt="MeGGi dev"
-            width={32}
-            height={32}
-            className="size-8 dark:hidden"
-          />
-          <Image
             src="/brand/logo-icon-clear.png"
             alt="MeGGi dev"
             width={32}
             height={32}
-            className="hidden size-8 dark:block"
+            className="size-8 dark:invert"
           />
           <span className="font-heading text-base font-semibold">
             MeGGi dev

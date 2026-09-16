@@ -15,7 +15,11 @@ export function AboutSection() {
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <Avatar size="lg">
-                  <AvatarImage src="/brand/logo-icon.png" alt="MeGGi dev" />
+                  <AvatarImage
+                    src="/brand/logo-icon-clear.png"
+                    alt="MeGGi dev"
+                    className="dark:invert"
+                  />
                   <AvatarFallback>MD</AvatarFallback>
                 </Avatar>
                 <div>

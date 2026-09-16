@@ -10,19 +10,11 @@ export function SiteFooter() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Image
-              src="/brand/logo.png"
-              alt="MeGGi"
-              width={96}
-              height={24}
-              className="h-6 w-auto dark:hidden"
-              loading="eager"
-            />
-            <Image
               src="/brand/logo-clear.png"
               alt="MeGGi"
               width={96}
               height={24}
-              className="hidden h-6 w-auto dark:block"
+              className="h-6 w-auto dark:invert"
               loading="eager"
             />
           </div>

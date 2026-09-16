@@ -8,7 +8,7 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - UI: `@base-ui/react`, `class-variance-authority`, `cn`, `lucide-react`, `motion`, `cobe`, `@radix-ui/react-icons` (dep transitif via Magic UI)
 - Registry: `@magicui` → `https://magicui.design/r/{name}`
 - Font: Outfit (`--font-sans`) + Geist/Geist_Mono; `font-heading` = `--font-sans`
-- Brand: `public/brand/logo*.png`, favicon: `public/favicons/` + `public/favicon.ico`
+- Brand: `public/brand/logo*.png`, favicon: `public/favicons/` + `public/favicon.ico`, auth imagery: `public/image/login-banner.jpg`. Arti `clear` = bg transparan (RGBA, sudut alpha 0), bukan varian dark. Tanpa `clear` = RGB bg putih.
 
 ## Struktur
 - `src/app/layout.tsx` — root, font, metadata MeGGi dev + viewport themeColor
@@ -16,7 +16,7 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `src/app/(public)/layout.tsx` — chrome: `SiteHeader` + children + `SiteFooter`
 - `src/app/(public)/_components/layout/` — `site-header.tsx`, `site-sidebar.tsx` (Sheet mobile), `site-footer.tsx`
 - `src/app/(public)/_components/page/` — `hero-section.tsx`, `stack-marquee.tsx`, `services-section.tsx`, `work-section.tsx`, `about-section.tsx`
-- `src/app/(auth)/login/page.tsx` → `/login` (placeholder)
+- `src/app/(auth)/login/page.tsx` → `/login` — split-screen: banner `login-banner.jpg` (`hidden md:flex`) + panel logo transparan + link `/dashboard`. Belum ada `(auth)/layout.tsx`, belum ada form (tanpa Field/Input/Button/action).
 - `src/app/(private)/dashboard/page.tsx` → `/dashboard` (placeholder)
 - `src/components/ui/` — `avatar`, `badge`, `bento-grid`, `blur-fade`, `button`, `card`, `globe`, `marquee`, `separator`, `sheet`
 - `src/lib/utils.ts` — re-export `cn` dari `cn`
@@ -63,17 +63,20 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - Tombol-link: `Button render={<Link href/>} nativeButton={false}`. Larangan: `Link > Button` (`<a><button>`, HTML invalid).
 - Ikon dalam Button/Badge: `data-icon="inline-start"` / `"inline-end"`, tanpa kelas sizing manual.
 - Card penuh: `CardHeader`/`CardTitle`/`CardDescription`/`CardContent`/`CardFooter`. Jangan tumpuk semua di `CardContent`.
+- Form: `FieldGroup` + `Field` + `FieldLabel`, bukan div + Label manual. Berlaku when form login dibangun.
 - Avatar butuh `AvatarFallback`. Tumpukan pakai `AvatarGroup`, bukan `div -space-x-2` manual.
 - Dialog/Sheet/Drawer wajib Title (+ Description bila ada). `SheetClose render={<Link/>}` bermasalah untuk navigasi anchor → pola proyek: controlled `Sheet open onOpenChange` + `useState`, tutup manual `setOpen(false)` di `Link onClick`.
 - Spacing: `flex` + `gap-*`. Larangan: `space-x-*`/`space-y-*`. Ukuran kotak: `size-*`. Kondisional: `cn()`.
-- Warna semantik (`bg-background`, `text-muted-foreground`, `bg-primary`). Larangan: nilai mentah (`bg-blue-500`) dan override `dark:` manual.
+- Warna semantik (`bg-background`, `text-muted-foreground`, `bg-primary`, `bg-muted`). Larangan: token asing (`bg-base-200`, daisyUI) dan nilai mentah (`bg-blue-500`) dan override `dark:` manual.
 - `Separator` ganti `<hr>`/border div. `Badge` untuk status/tag. `Marquee pauseOnHover`, `BlurFade inView` untuk reveal scroll.
 
 ## Pola responsive/layout
 - Desktop `md+`: nav inline + aksi header. Mobile `<md`: tombol `Menu` (`md:hidden`) buka `Sheet side="right"`.
-- Logo adaptif tema: `logo*.png` untuk light (`dark:hidden`), `logo*-clear.png` untuk dark (`hidden dark:block`). Berlaku header + footer.
+- Logo: selalu varian `*-clear.png` (transparan) + `dark:invert` untuk dark mode. Larangan: tukar file per tema (`dark:hidden`/`dark:block`) dan pakai non-clear (bg putih, merusak blend).
+- Login split-screen: banner kiri `hidden md:flex` + panel kanan `flex-1`. Mobile hanya panel (banner hilang).
 - Hero `lg:grid-cols-2` (teks + `Globe`). Services `BentoGrid`. Work feature-rows zigzag (`lg:order-2` selang-seling) + `Separator` antar baris. Work visual mock CSS-only (dashboard/site/system) — ganti gambar real when aset ada.
 
 ## Utang / next
+- Login: belum form (tambah `Field` + `Input` + `Button` via CLI, bukan markup manual), belum `(auth)/layout.tsx`, link `/dashboard` masih placeholder tanpa auth.
 - Konten `projects`/`services` masih placeholder + metrik ilustratif. Konten real + case-study when siap.
 - About `#contact` anchor hidup di dalam `AboutSection`; pindah ke section kontak sendiri when form kontak masuk.

@@ -50,7 +50,11 @@ export function HeroSection() {
           <div className="flex items-center gap-3">
             <AvatarGroup>
               <Avatar size="sm">
-                <AvatarImage src="/brand/logo-icon.png" alt="MeGGi dev" />
+                <AvatarImage
+                  src="/brand/logo-icon-clear.png"
+                  alt="MeGGi dev"
+                  className="dark:invert"
+                />
                 <AvatarFallback>MD</AvatarFallback>
               </Avatar>
               <Avatar size="sm">
