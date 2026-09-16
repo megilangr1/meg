@@ -1,20 +1,24 @@
 # PROJECT.md — meg
 
-Fresh init. Isi bertambah seiring fitur.
+Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 
 ## Stack
 - Next.js 16.3.5, React 19.2.8, TS strict, path `@/*` → `src/*`
 - Tailwind v4 (`src/app/globals.css`), `tw-animate-css`, shadcn style `base-nova`, baseColor neutral, CSS vars on
-- UI: `@base-ui/react`, `class-variance-authority`, `cn`, `lucide-react`, `motion`, `cobe`
+- UI: `@base-ui/react`, `class-variance-authority`, `cn`, `lucide-react`, `motion`, `cobe`, `@radix-ui/react-icons` (dep transitif via Magic UI)
 - Registry: `@magicui` → `https://magicui.design/r/{name}`
+- Font: Outfit (`--font-sans`) + Geist/Geist_Mono; `font-heading` = `--font-sans`
+- Brand: `public/brand/logo*.png`, favicon: `public/favicons/` + `public/favicon.ico`
 
 ## Struktur
-- `src/app/layout.tsx` — root, font Outfit + Geist, `cn`
-- `src/app/(public)/page.tsx` → `/`, link `/login`
-- `src/app/(public)/layout.tsx` — wrapper div polos
-- `src/app/(auth)/login/page.tsx` → `/login`, link `/dashboard`
-- `src/app/(private)/dashboard/page.tsx` → `/dashboard`, link `/`
-- `src/components/ui/` — `button.tsx`, `card.tsx`, `globe.tsx`
+- `src/app/layout.tsx` — root, font, metadata MeGGi dev + viewport themeColor
+- `src/app/(public)/page.tsx` — rakit 5 sections saja, tanpa chrome
+- `src/app/(public)/layout.tsx` — chrome: `SiteHeader` + children + `SiteFooter`
+- `src/app/(public)/_components/layout/` — `site-header.tsx`, `site-sidebar.tsx` (Sheet mobile), `site-footer.tsx`
+- `src/app/(public)/_components/page/` — `hero-section.tsx`, `stack-marquee.tsx`, `services-section.tsx`, `work-section.tsx`, `about-section.tsx`
+- `src/app/(auth)/login/page.tsx` → `/login` (placeholder)
+- `src/app/(private)/dashboard/page.tsx` → `/dashboard` (placeholder)
+- `src/components/ui/` — `avatar`, `badge`, `bento-grid`, `blur-fade`, `button`, `card`, `globe`, `marquee`, `separator`, `sheet`
 - `src/lib/utils.ts` — re-export `cn` dari `cn`
 - `next.config.ts` — kosong default
 
@@ -34,7 +38,42 @@ Fresh init. Isi bertambah seiring fitur.
 - `npm run dev` — dev server
 - `npm run build` / `npm run start` — build/start
 - `npm run lint` — `eslint`
+- Verifikasi standar tiap ubah UI: `npx.cmd tsc --noEmit --skipLibCheck`, lalu `npx.cmd eslint <file>`. PowerShell: panggil via `npx.cmd`/`npm.cmd`, bukan `npx`/`npm` langsung (execution policy).
+- `next build` pernah hijau (routes `/`, `/login`, `/dashboard`), tapi output log kepotong di runner. Jangan klaim hijau ulang tanpa run baru.
 
-## Aturan agen
+## Aturan keras user
+- Jangan copy-paste komponen. Selalu tambah via CLI resmi sesuai docs: `npx shadcn@latest add <item>` (contoh: `npx shadcn@latest add @magicui/bento-grid`).
+- Alur wajib tiap komponen baru: `search` → `docs <component>` + fetch URL contoh → `add` → baca file hasil add → perbaiki sebelum lanjut.
+- Yang sudah terpasang via CLI (jangan tulis manual):
+  - `npx shadcn@latest add @shadcn/badge @shadcn/avatar @shadcn/separator`
+  - `npx shadcn@latest add @magicui/bento-grid @magicui/blur-fade @magicui/marquee`
+  - `npx shadcn@latest add @shadcn/sheet`
+- Cek hasil add: import `@/components/ui/...` hardcode dari registry pihak ketiga harus disesuaikan ke alias proyek; ikon ikut `iconLibrary` (`lucide-react`).
 - Next.js ini breaking changes. Baca `node_modules/next/dist/docs/` sebelum tulis kode. Patuhi deprecation.
 - `AGENTS.md` auto-generate oleh `next dev`. Jangan hapus manual.
+- Gaya repo: hapus dulu, tulis paling sedikit yang jalan. Tanpa abstraksi pesanan (tanpa barrel `index.ts` sampai impor lintas-route butuh).
+
+## Pola _components
+- `(public)/_components/layout/` = chrome (header/sidebar/footer). `(public)/_components/page/` = sections halaman. Ulangi pola ini untuk `(auth)`/`(private)` when rute nambah.
+- `page.tsx` hanya rakit sections. `layout.tsx` hanya rakit chrome + children.
+- Export: named (`export function ...`). Pengecualian: `site-sidebar.tsx` pakai `export default function SiteSidebar`, impor default di `site-header.tsx:5`.
+- Data dummy tinggal di file section (`stack`, `services`, `projects`). Angkat ke `src/data/` atau CMS when konten real masuk.
+
+## Pola shadcn/Base UI (base, bukan radix)
+- Tombol-link: `Button render={<Link href/>} nativeButton={false}`. Larangan: `Link > Button` (`<a><button>`, HTML invalid).
+- Ikon dalam Button/Badge: `data-icon="inline-start"` / `"inline-end"`, tanpa kelas sizing manual.
+- Card penuh: `CardHeader`/`CardTitle`/`CardDescription`/`CardContent`/`CardFooter`. Jangan tumpuk semua di `CardContent`.
+- Avatar butuh `AvatarFallback`. Tumpukan pakai `AvatarGroup`, bukan `div -space-x-2` manual.
+- Dialog/Sheet/Drawer wajib Title (+ Description bila ada). `SheetClose render={<Link/>}` bermasalah untuk navigasi anchor → pola proyek: controlled `Sheet open onOpenChange` + `useState`, tutup manual `setOpen(false)` di `Link onClick`.
+- Spacing: `flex` + `gap-*`. Larangan: `space-x-*`/`space-y-*`. Ukuran kotak: `size-*`. Kondisional: `cn()`.
+- Warna semantik (`bg-background`, `text-muted-foreground`, `bg-primary`). Larangan: nilai mentah (`bg-blue-500`) dan override `dark:` manual.
+- `Separator` ganti `<hr>`/border div. `Badge` untuk status/tag. `Marquee pauseOnHover`, `BlurFade inView` untuk reveal scroll.
+
+## Pola responsive/layout
+- Desktop `md+`: nav inline + aksi header. Mobile `<md`: tombol `Menu` (`md:hidden`) buka `Sheet side="right"`.
+- Logo adaptif tema: `logo*.png` untuk light (`dark:hidden`), `logo*-clear.png` untuk dark (`hidden dark:block`). Berlaku header + footer.
+- Hero `lg:grid-cols-2` (teks + `Globe`). Services `BentoGrid`. Work feature-rows zigzag (`lg:order-2` selang-seling) + `Separator` antar baris. Work visual mock CSS-only (dashboard/site/system) — ganti gambar real when aset ada.
+
+## Utang / next
+- Konten `projects`/`services` masih placeholder + metrik ilustratif. Konten real + case-study when siap.
+- About `#contact` anchor hidup di dalam `AboutSection`; pindah ke section kontak sendiri when form kontak masuk.
