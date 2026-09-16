@@ -1,0 +1,22 @@
+{
+  "mcp": {
+    "next-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "next-devtools-mcp@latest"],
+      "environment": {},
+      "enabled": true
+    },
+    "shadcn": {
+      "type": "local",
+      "command": ["npx", "shadcn@latest", "mcp"],
+      "enabled": true
+    },
+    "magicuidesign-mcp": {
+      "type": "local",
+      "command": ["npx", "-y", "@magicuidesign/mcp@latest"],
+      "environment": {},
+      "enabled": true
+    }
+  },
+  "$schema": "https://opencode.ai/config.json"
+}
