@@ -9,6 +9,7 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - Registry: `@magicui` → `https://magicui.design/r/{name}`
 - Font: Outfit (`--font-sans`) + Geist/Geist_Mono; `font-heading` = `--font-sans`
 - Brand: `public/brand/logo*.png`, favicon: `public/favicons/` + `public/favicon.ico`, auth imagery: `public/image/login-banner.jpg`. Arti `clear` = bg transparan (RGBA, sudut alpha 0), bukan varian dark. Tanpa `clear` = RGB bg putih.
+- DB: Prisma ORM 7.10.0 (`prisma`, `@prisma/client`), adapter `@prisma/adapter-mariadb` + driver `mariadb` 3.4.5 (transitif), provider `mysql` → MariaDB XAMPP `localhost:3306/meg`. DevDeps pendukung: `dotenv`, `tsx`.
 
 ## Struktur
 - `src/app/layout.tsx` — root, font, metadata MeGGi dev + viewport themeColor
@@ -21,6 +22,11 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `src/app/(private)/_components/` — `app-sidebar.tsx` (default export, rakit 4 partial), `app-header.tsx` (named, `SidebarTrigger` + `Separator`).
 - `src/app/(private)/_components/sidebar/` — `sidebar-brand.tsx` (logo `*-clear.png` + `dark:invert`, `SidebarMenuButton render={<Link/>}`), `sidebar-nav-main.tsx` (`"use client"`, `usePathname` + `isActive`), `sidebar-nav-other.tsx` (grup `mt-auto`), `sidebar-user-info.tsx` (Avatar + fallback, dummy `meg@mail.com`).
 - `src/app/(private)/dashboard/page.tsx` → `/dashboard` (placeholder)
+- `prisma/schema.prisma` — kosongan: generator `prisma-client` → `../src/generated/prisma`, datasource `mysql`, tanpa model. `prisma/migrations/` belum ada (belum `migrate dev`).
+- `prisma7.config.ts` — schema + migrations path + `datasource.url` dari `DATABASE_URL`. Auto-load oleh CLI (`prisma validate` hijau tanpa `--config`). Nama non-standar vs `prisma.config.ts` di skills — jalan, tapi selaraskan later bila mau ikut konvensi.
+- `src/lib/prisma.ts` — `PrismaMariaDb` + `PrismaClient`, impor dari `../generated/prisma/client`. Catatan: tanpa pola singleton `globalThis` dari skill `prisma-client-api` (`constructor.md:143-196`) — dev HMR rawan multi-instance. Tambah when DB dipakai query real.
+- `src/generated/prisma/` — output generate, gitignore. Jangan impor manual di luar `src/lib/prisma.ts`.
+- `.env` + `.env.example` — `DATABASE_URL` + pecahan `DATABASE_HOST/PORT/USER/PASSWORD/NAME` (XAMPP root tanpa password). Keduanya gitignore (`.env*`), nilai kredensial dev lokal. `prisma.ts` pakai pecahan, bukan `DATABASE_URL` — selaraskan ke satu sumber later.
 - `src/components/ui/` — `avatar`, `badge`, `bento-grid`, `blur-fade`, `button`, `card`, `collapsible`, `context-menu`, `dropdown-menu`, `globe`, `input`, `marquee`, `separator`, `sheet`, `sidebar`, `skeleton`, `tooltip`
 - `src/hooks/use-mobile.ts` — hook bawaan `add sidebar` (jangan tulis manual)
 - `src/lib/utils.ts` — re-export `cn` dari `cn`
@@ -31,12 +37,13 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `shadcn` — `npx shadcn@latest mcp` — tambah/cari komponen
 - `magicuidesign-mcp` — `npx -y @magicuidesign/mcp@latest` — registry Magic UI
 
-## Skills (`.agents/skills/`, 7, sesuai `skills-lock.json`)
+## Skills (`.agents/skills/`, 16, sesuai `skills-lock.json`)
 - `shadcn` — kelola komponen shadcn
 - `migrate-radix-to-base` — migrasi Radix → Base UI
 - `next-dev-loop` — verifikasi runtime via `next dev` + browser
 - `next-cache-components-adoption` / `next-cache-components-optimizer` — Cache Components
 - `next-partial-prefetching-adoption` / `next-partial-prefetching-optimizer` — Partial Prefetching
+- Prisma resmi (`prisma/skills`): `prisma-cli` (init/generate/migrate/db/studio), `prisma-client-api` (query + pola singleton `globalThis`), `prisma-database-setup` (+ `references/mysql.md`: adapter `@prisma/adapter-mariadb`), `prisma-driver-adapter-implementation` (adaptor kustom saja), `prisma-postgres` / `prisma-postgres-setup` / `prisma-compute` (tidak terpakai, provider proyek = mysql), `prisma-mongodb-upgrade` (tidak terpakai; MongoDB = tetap v6, bukan v7), `prisma-upgrade-v7` (sudah v7, arsip migrasi)
 
 ## Perintah
 - `npm run dev` — dev server
@@ -44,6 +51,7 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `npm run lint` — `eslint`
 - Verifikasi standar tiap ubah UI: `npx.cmd tsc --noEmit --skipLibCheck`, lalu `npx.cmd eslint <file>`. PowerShell: panggil via `npx.cmd`/`npm.cmd`, bukan `npx`/`npm` langsung (execution policy).
 - `next build` pernah hijau (routes `/`, `/login`, `/dashboard`), tapi output log kepotong di runner. Jangan klaim hijau ulang tanpa run baru.
+- DB: `npx.cmd prisma validate` (hijau 2026-09-16), `npx.cmd prisma generate`, `npx.cmd prisma migrate dev`. Ikut skill `prisma-cli`, bukan hafalan flags.
 
 ## Aturan keras user
 - Jangan copy-paste komponen. Selalu tambah via CLI resmi sesuai docs: `npx shadcn@latest add <item>` (contoh: `npx shadcn@latest add @magicui/bento-grid`).
@@ -83,6 +91,7 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - Hero `lg:grid-cols-2` (teks + `Globe`). Services `BentoGrid`. Work feature-rows zigzag (`lg:order-2` selang-seling) + `Separator` antar baris. Work visual mock CSS-only (dashboard/site/system) — ganti gambar real when aset ada.
 
 ## Utang / next
+- DB: belum model, belum migrasi, belum singleton `globalThis`, belum query dipakai (`src/lib/prisma.ts` tak terimpor). Nama config `prisma7.config.ts` non-standar. `prisma.ts` (pecahan HOST/PORT/...) vs `prisma7.config.ts` (`DATABASE_URL`) dua sumber — satukan later. Prompt Prisma tawarkan upgrade 8.0.0-rc — abaikan (tetap 7.10.0 stabil).
 - Private: user dummy (`meg@mail.com`, avatar = banner login) di `app-sidebar.tsx:24-30`; `dashboard/page.tsx` placeholder. `sidebar-user-info.tsx:21` pakai `<a href="#">` — ganti `DropdownMenu` + sign-out when auth masuk.
 - Login: belum form (tambah `Field` + `Input` + `Button` via CLI, bukan markup manual), belum `(auth)/layout.tsx`, link `/dashboard` masih placeholder tanpa auth.
 - Konten `projects`/`services` masih placeholder + metrik ilustratif. Konten real + case-study when siap.
