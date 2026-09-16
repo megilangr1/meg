@@ -17,8 +17,12 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `src/app/(public)/_components/layout/` — `site-header.tsx`, `site-sidebar.tsx` (Sheet mobile), `site-footer.tsx`
 - `src/app/(public)/_components/page/` — `hero-section.tsx`, `stack-marquee.tsx`, `services-section.tsx`, `work-section.tsx`, `about-section.tsx`
 - `src/app/(auth)/login/page.tsx` → `/login` — split-screen: banner `login-banner.jpg` (`hidden md:flex`) + panel logo transparan + link `/dashboard`. Belum ada `(auth)/layout.tsx`, belum ada form (tanpa Field/Input/Button/action).
+- `src/app/(private)/layout.tsx` — `SidebarProvider` + `AppSidebar` + `SidebarInset` + `AppHeader`. Pola contoh resmi `sidebar-example.tsx` (provider/sidebar/inset, bukan div manual).
+- `src/app/(private)/_components/` — `app-sidebar.tsx` (default export, rakit 4 partial), `app-header.tsx` (named, `SidebarTrigger` + `Separator`).
+- `src/app/(private)/_components/sidebar/` — `sidebar-brand.tsx` (logo `*-clear.png` + `dark:invert`, `SidebarMenuButton render={<Link/>}`), `sidebar-nav-main.tsx` (`"use client"`, `usePathname` + `isActive`), `sidebar-nav-other.tsx` (grup `mt-auto`), `sidebar-user-info.tsx` (Avatar + fallback, dummy `meg@mail.com`).
 - `src/app/(private)/dashboard/page.tsx` → `/dashboard` (placeholder)
-- `src/components/ui/` — `avatar`, `badge`, `bento-grid`, `blur-fade`, `button`, `card`, `globe`, `marquee`, `separator`, `sheet`
+- `src/components/ui/` — `avatar`, `badge`, `bento-grid`, `blur-fade`, `button`, `card`, `collapsible`, `context-menu`, `dropdown-menu`, `globe`, `input`, `marquee`, `separator`, `sheet`, `sidebar`, `skeleton`, `tooltip`
+- `src/hooks/use-mobile.ts` — hook bawaan `add sidebar` (jangan tulis manual)
 - `src/lib/utils.ts` — re-export `cn` dari `cn`
 - `next.config.ts` — kosong default
 
@@ -48,13 +52,14 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
   - `npx shadcn@latest add @shadcn/badge @shadcn/avatar @shadcn/separator`
   - `npx shadcn@latest add @magicui/bento-grid @magicui/blur-fade @magicui/marquee`
   - `npx shadcn@latest add @shadcn/sheet`
+  - `npx shadcn@latest add @shadcn/sidebar` (+ transitif: `collapsible`, `context-menu`, `dropdown-menu`, `input`, `skeleton`, `tooltip`, `src/hooks/use-mobile.ts`)
 - Cek hasil add: import `@/components/ui/...` hardcode dari registry pihak ketiga harus disesuaikan ke alias proyek; ikon ikut `iconLibrary` (`lucide-react`).
 - Next.js ini breaking changes. Baca `node_modules/next/dist/docs/` sebelum tulis kode. Patuhi deprecation.
 - `AGENTS.md` auto-generate oleh `next dev`. Jangan hapus manual.
 - Gaya repo: hapus dulu, tulis paling sedikit yang jalan. Tanpa abstraksi pesanan (tanpa barrel `index.ts` sampai impor lintas-route butuh).
 
 ## Pola _components
-- `(public)/_components/layout/` = chrome (header/sidebar/footer). `(public)/_components/page/` = sections halaman. Ulangi pola ini untuk `(auth)`/`(private)` when rute nambah.
+- `(public)/_components/layout/` = chrome (header/sidebar/footer). `(public)/_components/page/` = sections halaman. `(private)/_components/` = chrome app (`app-sidebar`, `app-header`) + `sidebar/` partial (brand/nav-main/nav-other/user-info). Ulangi pola ini untuk `(auth)` when rute nambah.
 - `page.tsx` hanya rakit sections. `layout.tsx` hanya rakit chrome + children.
 - Export: named (`export function ...`). Pengecualian: `site-sidebar.tsx` pakai `export default function SiteSidebar`, impor default di `site-header.tsx:5`.
 - Data dummy tinggal di file section (`stack`, `services`, `projects`). Angkat ke `src/data/` atau CMS when konten real masuk.
@@ -66,6 +71,7 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - Form: `FieldGroup` + `Field` + `FieldLabel`, bukan div + Label manual. Berlaku when form login dibangun.
 - Avatar butuh `AvatarFallback`. Tumpukan pakai `AvatarGroup`, bukan `div -space-x-2` manual.
 - Dialog/Sheet/Drawer wajib Title (+ Description bila ada). `SheetClose render={<Link/>}` bermasalah untuk navigasi anchor → pola proyek: controlled `Sheet open onOpenChange` + `useState`, tutup manual `setOpen(false)` di `Link onClick`.
+- Sidebar: `SidebarMenuButton render={<Link/>}` ikut pola resmi. Nav aktif: `"use client"` + `usePathname` + `isActive` di `sidebar-nav-main.tsx`. Ikon `lucide-react` langsung (`<Icon />`), tanpa sizing manual.
 - Spacing: `flex` + `gap-*`. Larangan: `space-x-*`/`space-y-*`. Ukuran kotak: `size-*`. Kondisional: `cn()`.
 - Warna semantik (`bg-background`, `text-muted-foreground`, `bg-primary`, `bg-muted`). Larangan: token asing (`bg-base-200`, daisyUI) dan nilai mentah (`bg-blue-500`) dan override `dark:` manual.
 - `Separator` ganti `<hr>`/border div. `Badge` untuk status/tag. `Marquee pauseOnHover`, `BlurFade inView` untuk reveal scroll.
@@ -77,6 +83,7 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - Hero `lg:grid-cols-2` (teks + `Globe`). Services `BentoGrid`. Work feature-rows zigzag (`lg:order-2` selang-seling) + `Separator` antar baris. Work visual mock CSS-only (dashboard/site/system) — ganti gambar real when aset ada.
 
 ## Utang / next
+- Private: user dummy (`meg@mail.com`, avatar = banner login) di `app-sidebar.tsx:24-30`; `dashboard/page.tsx` placeholder. `sidebar-user-info.tsx:21` pakai `<a href="#">` — ganti `DropdownMenu` + sign-out when auth masuk.
 - Login: belum form (tambah `Field` + `Input` + `Button` via CLI, bukan markup manual), belum `(auth)/layout.tsx`, link `/dashboard` masih placeholder tanpa auth.
 - Konten `projects`/`services` masih placeholder + metrik ilustratif. Konten real + case-study when siap.
 - About `#contact` anchor hidup di dalam `AboutSection`; pindah ke section kontak sendiri when form kontak masuk.
