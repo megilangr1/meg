@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboardIcon } from "lucide-react";
+import { LayoutDashboardIcon, Users } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -13,6 +13,7 @@ import {
 
 const items = [
   { title: "Dashboard", url: "/dashboard", Icon: LayoutDashboardIcon },
+  { title: "Akun Pengguna", url: "/akun-pengguna", Icon: Users },
 ];
 
 export function SidebarNavMain() {
