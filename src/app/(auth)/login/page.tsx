@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import LoginForm from "./_components/login-form";
 
 export default function Page() {
   return (
@@ -22,17 +22,19 @@ export default function Page() {
       </div>
 
       <div className="flex min-h-screen flex-1 flex-col items-center justify-center bg-muted p-6">
-        <div className="relative size-40 xl:size-60">
-          <Image
-            src="/brand/logo-icon-clear.png"
-            alt="MeGGi dev"
-            fill
-            sizes="auto"
-            className="object-cover dark:invert"
-          />
-        </div>
+        <div className="w-full sm:w-xs md:w-sm xl:w-md flex flex-col items-center justify-center">
+          <div className="relative size-28 md:size-40 xl:size-52">
+            <Image
+              src="/brand/logo-icon-clear.png"
+              alt="MeGGi dev"
+              fill
+              sizes="auto"
+              className="object-cover dark:invert"
+            />
+          </div>
 
-        <Link href={"/dashboard"}>To Dashboard</Link>
+          <LoginForm />
+        </div>
       </div>
     </main>
   );

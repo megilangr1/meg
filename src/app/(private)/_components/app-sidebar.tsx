@@ -21,13 +21,7 @@ const AppSidebar = () => {
         <SidebarNavOther />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarUserInfo
-          user={{
-            name: "MeGGi",
-            avatar: "/image/login-banner.jpg",
-            email: "meg@mail.com",
-          }}
-        />
+        <SidebarUserInfo />
       </SidebarFooter>
     </Sidebar>
   );

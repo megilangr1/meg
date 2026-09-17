@@ -20,4 +20,15 @@ export const auth = betterAuth({
     admin(), // Activate 'Admin' for Better Auth
     nextCookies(), // NextJS 16 Important Plugins
   ],
+
+  user: {
+    additionalFields: {
+      role: {
+        type: ["user", "admin"],
+        required: false,
+        defaultValue: "user",
+        input: false,
+      },
+    },
+  },
 });

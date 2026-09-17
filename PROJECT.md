@@ -18,14 +18,15 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `src/app/(public)/layout.tsx` — chrome: `SiteHeader` + children + `SiteFooter`
 - `src/app/(public)/_components/layout/` — `site-header.tsx`, `site-sidebar.tsx` (Sheet mobile), `site-footer.tsx`
 - `src/app/(public)/_components/page/` — `hero-section.tsx`, `stack-marquee.tsx`, `services-section.tsx`, `work-section.tsx`, `about-section.tsx`
-- `src/app/(auth)/login/page.tsx` → `/login` — split-screen: banner `login-banner.jpg` (`hidden md:flex`) + panel logo transparan + link `/dashboard`. Belum ada `(auth)/layout.tsx`, belum ada form (tanpa Field/Input/Button/action).
+- `src/app/(auth)/login/page.tsx` → `/login` — split-screen: banner `login-banner.jpg` (`hidden md:flex`) + panel logo + `LoginForm` (`_components/login-form.tsx`: RHF + zod `modules/auth/login.schema.ts`, `Field`/`Input`/`Button` + `required` + `autoComplete`, `signIn.email`, error map `modules/auth/login.errors.ts`, `onSuccess` → toast + `push /dashboard` + `refresh`). `(auth)/layout.tsx` sengaja skip (keputusan user, belum butuh).
+- `src/proxy.ts` — guard: `/login` redirect ke `/dashboard` bila sudah login; `/dashboard|/master-data|/pendataan-area` wajib session (via `auth.api.getSession`). Matcher lewati `api|_next|*.png|favicon.ico`.
 - `src/app/(private)/layout.tsx` — `SidebarProvider` + `AppSidebar` + `SidebarInset` + `AppHeader`. Pola contoh resmi `sidebar-example.tsx` (provider/sidebar/inset, bukan div manual).
 - `src/app/(private)/_components/` — `app-sidebar.tsx` (default export, rakit 4 partial), `app-header.tsx` (named, `SidebarTrigger` + `Separator`).
-- `src/app/(private)/_components/sidebar/` — `sidebar-brand.tsx` (logo `*-clear.png` + `dark:invert`, `SidebarMenuButton render={<Link/>}`), `sidebar-nav-main.tsx` (`"use client"`, `usePathname` + `isActive`), `sidebar-nav-other.tsx` (grup `mt-auto`), `sidebar-user-info.tsx` (Avatar + fallback, dummy `meg@mail.com`).
+- `src/app/(private)/_components/sidebar/` — `sidebar-brand.tsx` (logo `*-clear.png` + `dark:invert`, `SidebarMenuButton render={<Link/>}`), `sidebar-nav-main.tsx` (`"use client"`, `usePathname` + `isActive`), `sidebar-nav-other.tsx` (grup `mt-auto`), `sidebar-user-info.tsx` (`"use client"`, `useSession` + early-return loading/error/content, `DropdownMenu` + `LogoutButton` `shared/`, avatar masih dummy banner).
 - `src/app/(private)/dashboard/page.tsx` → `/dashboard` (placeholder)
 - `prisma/schema.prisma` — generator `prisma-client` → `../src/generated/prisma`, datasource `mysql`, model `User`/`Session`/`Account`/`Verification` (hasil `npx auth@latest generate` + field plugin `admin`: `role/banned/banReason/banExpires`, `impersonatedBy`). `prisma/migrations/20260917034125_init_auth/` sudah ada (sudah `migrate dev`).
 - `prisma.config.ts` — schema + migrations path + `seed: "tsx prisma/seed/index.ts"` + `datasource.url` dari `DATABASE_URL`. Nama standar (rename dari `prisma7.config.ts` bawaan init, 2026-09-17). Auto-load CLI (`prisma validate` hijau tanpa `--config`).
-- `src/lib/prisma.ts` — `PrismaMariaDb(DATABASE_URL)` (satu sumber env + throw bila hilang; adaptor terima connection-string langsung, adaptasi mysql dari contoh pgsql docs) + `PrismaClient` dari `../generated/prisma/client`, singleton via `global` + `export default prisma` — ikut guide resmi Prisma v7 Next.js (`prisma.io/docs/guides/v7/frameworks/nextjs`). Pengecualian aturan named-export.
+- `src/lib/prisma.ts` — `PrismaMariaDb(DATABASE_URL)` (satu sumber env + throw bila hilang; adaptor terima connection-string langsung, adaptasi mysql dari contoh pgsql docs) + `PrismaClient` dari `../generated/prisma/client`, singleton via `globalThis` + `export default prisma` — ikut guide resmi Prisma v7 Next.js (`prisma.io/docs/guides/v7/frameworks/nextjs`). Pengecualian aturan named-export.
 - `src/lib/auth.ts` — `betterAuth`: `prismaAdapter(prisma, mysql)` + `emailAndPassword: { enabled: true }` + plugins `[admin(), nextCookies()]`. `nextCookies` wajib terakhir (docs `/docs/integrations/next`); `admin` via dedicated path `better-auth/plugins/admin` (tree-shaking, sesuai skill). Impor default `prisma` dari `./prisma`.
 - `src/lib/auth-client.ts` — `createAuthClient` (`better-auth/react`) + `adminClient()`. Tanpa `baseURL` (same-domain, docs Next tidak pakai; `BETTER_AUTH_URL` tanpa `NEXT_PUBLIC_` = undefined di browser).
 - `src/app/api/auth/[...all]/route.ts` — `toNextJsHandler(auth)` (`GET, POST`), gateway `/api/auth/*`.
@@ -33,15 +34,18 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `notes.md` — cheat-sheet CLI (`migrate dev/reset`, `generate`, `auth@latest create-admin`). Untracked, belum commit.
 - `src/generated/prisma/` — output generate, gitignore. Jangan impor manual di luar `src/lib/prisma.ts`.
 - `.env` + `.env.example` — `DATABASE_URL` (satu-satunya sumber koneksi: `prisma.ts`, `seed`, `prisma.config.ts`; var pecahan `DATABASE_HOST/PORT/...` sudah dihapus 2026-09-17) + `BETTER_AUTH_URL`/`BETTER_AUTH_SECRET` (secret generate via `openssl rand -base64 32`). Keduanya gitignore (`.env*`), nilai kredensial dev lokal (XAMPP root tanpa password).
-- `src/components/ui/` — `avatar`, `badge`, `bento-grid`, `blur-fade`, `button`, `card`, `collapsible`, `context-menu`, `dropdown-menu`, `globe`, `input`, `marquee`, `separator`, `sheet`, `sidebar`, `skeleton`, `tooltip`
-- `src/hooks/use-mobile.ts` — hook bawaan `add sidebar` (jangan tulis manual)
+- `src/components/ui/` — `avatar`, `badge`, `bento-grid`, `blur-fade`, `button`, `card`, `collapsible`, `context-menu`, `dropdown-menu`, `field`, `globe`, `input`, `label`, `marquee`, `separator`, `sheet`, `sidebar`, `skeleton`, `toast`, `tooltip`
+- `src/components/shared/` — `logout-button.tsx` (`signOut` + `push /`)
+- `src/helpers/client/` — `client.helper.ts` (`doAlert` → `toast.add`)
+- `src/hooks/use-mobile.ts` — bawaan `add sidebar`, dimodifikasi mininmal (init `setIsMobile` via `requestAnimationFrame` agar lolos `react-hooks/set-state-in-effect`). Disimpan sebagai study case pola fix.
 - `src/lib/utils.ts` — re-export `cn` dari `cn`
 - `next.config.ts` — kosong default
 
 ## Pola _components
-- `(public)/_components/layout/` = chrome (header/sidebar/footer). `(public)/_components/page/` = sections halaman. `(private)/_components/` = chrome app (`app-sidebar`, `app-header`) + `sidebar/` partial (brand/nav-main/nav-other/user-info). Ulangi pola ini untuk `(auth)` when rute nambah.
+- `(public)/_components/layout/` = chrome (header/sidebar/footer). `(public)/_components/page/` = sections halaman. `(private)/_components/` = chrome app (`app-sidebar`, `app-header`) + `sidebar/` partial (brand/nav-main/nav-other/user-info). `(auth)/_components/` = pecahan `page.tsx` (mis. `login-form.tsx`). Ulangi pola ini untuk route baru.
+- `_components/` = pecahan komponen yang dipakai `page.tsx`-nya sendiri. `components/shared/` = komponen anywhere-use (mis. `logout-button.tsx`). `helpers/client/` = fungsi reusable yang dipanggil client component; `helpers/server/` = untuk server component/action (buat saat dibutuhkan). `modules/<domain>/` = artefak domain (zod schema, error map).
 - `page.tsx` hanya rakit sections. `layout.tsx` hanya rakit chrome + children.
-- Export: named (`export function ...`, `export const auth/authClient`). Pengecualian: `site-sidebar.tsx` pakai `export default function SiteSidebar`, impor default di `site-header.tsx:5`; `src/lib/prisma.ts` pakai `export default prisma` ikut guide resmi Prisma, impor default di `auth.ts:5`.
+- Export: ikut best practice React/Next.js yang sedang dipakai (named untuk partial/komponen, default bila mengikuti pola resmi contoh/docs). Tanpa catatan khusus per-file.
 - Data dummy tinggal di file section (`stack`, `services`, `projects`). Angkat ke `src/data/` atau CMS when konten real masuk.
 
 ## Pola shadcn/Base UI (base, bukan radix)
@@ -70,10 +74,11 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
   - `npx shadcn@latest add @magicui/bento-grid @magicui/blur-fade @magicui/marquee`
   - `npx shadcn@latest add @shadcn/sheet`
   - `npx shadcn@latest add @shadcn/sidebar` (+ transitif: `collapsible`, `context-menu`, `dropdown-menu`, `input`, `skeleton`, `tooltip`, `src/hooks/use-mobile.ts`)
+  - Batch login form: `@shadcn/field`, `@shadcn/label`, `@shadcn/toast` (+ `Toaster` global di root layout)
 - Cek hasil add: import `@/components/ui/...` hardcode dari registry pihak ketiga harus disesuaikan ke alias proyek; ikon ikut `iconLibrary` (`lucide-react`).
 - Next.js ini breaking changes. Baca `node_modules/next/dist/docs/` sebelum tulis kode. Patuhi deprecation.
 - `AGENTS.md` auto-generate oleh `next dev`. Jangan hapus manual.
-- Gaya repo: hapus dulu, tulis paling sedikit yang jalan. Tanpa abstraksi pesanan (tanpa barrel `index.ts` sampai impor lintas-route butuh).
+- Gaya repo: hapus dulu, tulis paling sedikit yang jalan. Tanpa abstraksi pesanan (tanpa barrel `index.ts` sampai impor lintas-route butuh). Tanpa copas antar-proyek (contoh: `use-media-query.ts` dihapus 2026-09-17 karena tak terpakai). Prinsip: **KISS = Keep it simple, stupid. Scale later**.
 
 ## Perintah
 - `npm run dev` — dev server
@@ -100,8 +105,8 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - Prisma resmi (`prisma/skills`): `prisma-cli` (init/generate/migrate/db/studio), `prisma-client-api` (query + pola singleton `globalThis`), `prisma-database-setup` (+ `references/mysql.md`: adapter `@prisma/adapter-mariadb`), `prisma-driver-adapter-implementation` (adaptor kustom saja), `prisma-postgres` / `prisma-postgres-setup` / `prisma-compute` (tidak terpakai, provider proyek = mysql), `prisma-mongodb-upgrade` (tidak terpakai; MongoDB = tetap v6, bukan v7), `prisma-upgrade-v7` (sudah v7, arsip migrasi)
 
 ## Utang / next
-- Auth/DB: model + migrasi `20260917034125_init_auth` + singleton `global` + seed + rename `prisma.config.ts` + unifikasi `DATABASE_URL` + runtime check `/api/auth/ok → {"ok":true}` done (hijau: `tsc`, `prisma validate`, `eslint`, `db seed`, curl). Sisa: email flow ditunda (keputusan user — `sendVerificationEmail`/`sendResetPassword` belum definisi sampai ada provider email); `migrations/` + `seed/` + `auth.ts`/`auth-client.ts`/`notes.md` + rename config masih untracked (belum commit). Prompt Prisma tawarkan upgrade 8.0.0-rc — tolak. Keputusan versi: tetap 7.10.0 (Better Auth belum support Prisma 8 / integrasi belum cocok). Opsional stricter-dari-skill (di luar guide resmi): `global` → `globalThis`, adapter dalam factory.
-- Private: user dummy (`meg@mail.com`, avatar = banner login) di `app-sidebar.tsx:24-30`; `dashboard/page.tsx` placeholder. `sidebar-user-info.tsx:21` pakai `<a href="#">` — ganti `DropdownMenu` + sign-out when auth masuk.
-- Login: belum form (tambah `Field` + `Input` + `Button` via CLI, bukan markup manual), belum `(auth)/layout.tsx`, link `/dashboard` masih placeholder tanpa auth (belum pakai `authClient`/`useSession`).
+- Auth/DB: model + migrasi `20260917034125_init_auth` + singleton `global` + seed + rename `prisma.config.ts` + unifikasi `DATABASE_URL` + runtime check `/api/auth/ok → {"ok":true}` done (hijau: `tsc`, `prisma validate`, `eslint`, `db seed`, curl). Sisa: email flow ditunda (keputusan user — `sendVerificationEmail`/`sendResetPassword` belum definisi sampai ada provider email); `migrations/` + `seed/` + `auth.ts`/`auth-client.ts`/`notes.md` + rename config masih untracked (belum commit). Prompt Prisma tawarkan upgrade 8.0.0-rc — tolak. Keputusan versi: tetap 7.10.0 (Better Auth belum support Prisma 8 / integrasi belum cocok). Opsional stricter-dari-skill (di luar guide resmi): adapter dalam factory.
+- Private: avatar masih dummy (banner login) di `sidebar-user-info.tsx`; `dashboard/page.tsx` placeholder. Dropdown + sign-out done via `LogoutButton`.
+- Login: form + error map per kode (`INVALID_EMAIL_OR_PASSWORD`, `CREDENTIAL_ACCOUNT_NOT_FOUND`, `EMAIL_NOT_VERIFIED`, `BANNED_USER`, + pesan jaringan) done. Sisa: `Profile` masih `href="#"`; `rememberMe: false` = keputusan (tutup browser = logout).
 - Konten `projects`/`services` masih placeholder + metrik ilustratif. Konten real + case-study when siap.
 - About `#contact` anchor hidup di dalam `AboutSection`; pindah ke section kontak sendiri when form kontak masuk.

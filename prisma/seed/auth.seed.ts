@@ -10,13 +10,13 @@ type UserPayload = {
 
 const userData: UserPayload[] = [
   {
-    email: "admin@main.com",
+    email: "admin@mail.com",
     password: "admin123",
     name: "MeGGi",
     role: "admin",
   },
   {
-    email: "test@main.com",
+    email: "test@mail.com",
     password: "test1234",
     name: "Test",
     role: "user",
@@ -24,17 +24,21 @@ const userData: UserPayload[] = [
 ];
 
 export async function seedUser(prisma: PrismaClient) {
-  const check = await prisma.user.findMany();
-  if (check.length > 0) return;
+  try {
+    const check = await prisma.user.findMany();
+    if (check.length > 0) return;
 
-  for (const user of userData) {
-    await auth.api.createUser({
-      body: {
-        ...user,
-      },
-    });
+    for (const user of userData) {
+      await auth.api.createUser({
+        body: {
+          ...user,
+        },
+      });
+    }
+    console.log("=== USER DATA SEEDED ===");
+  } catch (error) {
+    console.error(error);
   }
-  console.log("=== USER DATA SEEDED ===");
 
   return;
 }

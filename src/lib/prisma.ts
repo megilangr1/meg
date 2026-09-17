@@ -2,8 +2,8 @@ import "dotenv/config";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../generated/prisma/client";
 
-const globalForPrisma = global as unknown as {
-  prisma: PrismaClient;
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
 };
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -15,7 +15,7 @@ if (!databaseUrl) {
 // Satu sumber env (`DATABASE_URL`, format mysql) — `PrismaMariaDb` terima connection-string langsung.
 const adapter = new PrismaMariaDb(databaseUrl);
 
-const prisma = globalForPrisma.prisma || new PrismaClient({ adapter });
+const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 

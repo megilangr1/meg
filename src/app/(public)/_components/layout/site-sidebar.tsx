@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -35,26 +34,25 @@ export default function SiteSidebar({
       </Button>
 
       <Sheet open={open} onOpenChange={(value) => setOpen(value)}>
-        <SheetContent side="right">
-          <SheetHeader>
+        <SheetContent side="right" className="gap-0">
+          <SheetHeader className="border-b">
             <SheetTitle>MeGGi dev</SheetTitle>
             <SheetDescription>
               Navigate sections and get in touch.
             </SheetDescription>
           </SheetHeader>
-          <nav className="flex flex-col gap-1 px-4">
+          <nav className="flex flex-col gap-1 py-2">
             {nav.map((n) => (
               <Link
                 key={n.href}
                 href={n.href}
-                className={"rounded-lg px-3 py-2 text-sm hover:bg-muted"}
+                className={"rounded-lg px-4 py-2 text-sm hover:bg-muted"}
                 onClick={() => setOpen(false)}
               >
                 {n.label}
               </Link>
             ))}
           </nav>
-          <Separator />
           <SheetFooter>
             <Button
               variant="outline"
