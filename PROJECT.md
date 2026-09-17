@@ -32,40 +32,6 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `src/lib/utils.ts` — re-export `cn` dari `cn`
 - `next.config.ts` — kosong default
 
-## MCP (`opencode.json`, semua `enabled:true`, `type:local`)
-- `next-devtools` — `npx -y next-devtools-mcp@latest` — error/route/build/cache dev server
-- `shadcn` — `npx shadcn@latest mcp` — tambah/cari komponen
-- `magicuidesign-mcp` — `npx -y @magicuidesign/mcp@latest` — registry Magic UI
-
-## Skills (`.agents/skills/`, 16, sesuai `skills-lock.json`)
-- `shadcn` — kelola komponen shadcn
-- `migrate-radix-to-base` — migrasi Radix → Base UI
-- `next-dev-loop` — verifikasi runtime via `next dev` + browser
-- `next-cache-components-adoption` / `next-cache-components-optimizer` — Cache Components
-- `next-partial-prefetching-adoption` / `next-partial-prefetching-optimizer` — Partial Prefetching
-- Prisma resmi (`prisma/skills`): `prisma-cli` (init/generate/migrate/db/studio), `prisma-client-api` (query + pola singleton `globalThis`), `prisma-database-setup` (+ `references/mysql.md`: adapter `@prisma/adapter-mariadb`), `prisma-driver-adapter-implementation` (adaptor kustom saja), `prisma-postgres` / `prisma-postgres-setup` / `prisma-compute` (tidak terpakai, provider proyek = mysql), `prisma-mongodb-upgrade` (tidak terpakai; MongoDB = tetap v6, bukan v7), `prisma-upgrade-v7` (sudah v7, arsip migrasi)
-
-## Perintah
-- `npm run dev` — dev server
-- `npm run build` / `npm run start` — build/start
-- `npm run lint` — `eslint`
-- Verifikasi standar tiap ubah UI: `npx.cmd tsc --noEmit --skipLibCheck`, lalu `npx.cmd eslint <file>`. PowerShell: panggil via `npx.cmd`/`npm.cmd`, bukan `npx`/`npm` langsung (execution policy).
-- `next build` pernah hijau (routes `/`, `/login`, `/dashboard`), tapi output log kepotong di runner. Jangan klaim hijau ulang tanpa run baru.
-- DB: `npx.cmd prisma validate` (hijau 2026-09-16), `npx.cmd prisma generate`, `npx.cmd prisma migrate dev`. Ikut skill `prisma-cli`, bukan hafalan flags.
-
-## Aturan keras user
-- Jangan copy-paste komponen. Selalu tambah via CLI resmi sesuai docs: `npx shadcn@latest add <item>` (contoh: `npx shadcn@latest add @magicui/bento-grid`).
-- Alur wajib tiap komponen baru: `search` → `docs <component>` + fetch URL contoh → `add` → baca file hasil add → perbaiki sebelum lanjut.
-- Yang sudah terpasang via CLI (jangan tulis manual):
-  - `npx shadcn@latest add @shadcn/badge @shadcn/avatar @shadcn/separator`
-  - `npx shadcn@latest add @magicui/bento-grid @magicui/blur-fade @magicui/marquee`
-  - `npx shadcn@latest add @shadcn/sheet`
-  - `npx shadcn@latest add @shadcn/sidebar` (+ transitif: `collapsible`, `context-menu`, `dropdown-menu`, `input`, `skeleton`, `tooltip`, `src/hooks/use-mobile.ts`)
-- Cek hasil add: import `@/components/ui/...` hardcode dari registry pihak ketiga harus disesuaikan ke alias proyek; ikon ikut `iconLibrary` (`lucide-react`).
-- Next.js ini breaking changes. Baca `node_modules/next/dist/docs/` sebelum tulis kode. Patuhi deprecation.
-- `AGENTS.md` auto-generate oleh `next dev`. Jangan hapus manual.
-- Gaya repo: hapus dulu, tulis paling sedikit yang jalan. Tanpa abstraksi pesanan (tanpa barrel `index.ts` sampai impor lintas-route butuh).
-
 ## Pola _components
 - `(public)/_components/layout/` = chrome (header/sidebar/footer). `(public)/_components/page/` = sections halaman. `(private)/_components/` = chrome app (`app-sidebar`, `app-header`) + `sidebar/` partial (brand/nav-main/nav-other/user-info). Ulangi pola ini untuk `(auth)` when rute nambah.
 - `page.tsx` hanya rakit sections. `layout.tsx` hanya rakit chrome + children.
@@ -89,6 +55,40 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - Logo: selalu varian `*-clear.png` (transparan) + `dark:invert` untuk dark mode. Larangan: tukar file per tema (`dark:hidden`/`dark:block`) dan pakai non-clear (bg putih, merusak blend).
 - Login split-screen: banner kiri `hidden md:flex` + panel kanan `flex-1`. Mobile hanya panel (banner hilang).
 - Hero `lg:grid-cols-2` (teks + `Globe`). Services `BentoGrid`. Work feature-rows zigzag (`lg:order-2` selang-seling) + `Separator` antar baris. Work visual mock CSS-only (dashboard/site/system) — ganti gambar real when aset ada.
+
+## Aturan keras user
+- Jangan copy-paste komponen. Selalu tambah via CLI resmi sesuai docs: `npx shadcn@latest add <item>` (contoh: `npx shadcn@latest add @magicui/bento-grid`).
+- Alur wajib tiap komponen baru: `search` → `docs <component>` + fetch URL contoh → `add` → baca file hasil add → perbaiki sebelum lanjut.
+- Yang sudah terpasang via CLI (jangan tulis manual):
+  - `npx shadcn@latest add @shadcn/badge @shadcn/avatar @shadcn/separator`
+  - `npx shadcn@latest add @magicui/bento-grid @magicui/blur-fade @magicui/marquee`
+  - `npx shadcn@latest add @shadcn/sheet`
+  - `npx shadcn@latest add @shadcn/sidebar` (+ transitif: `collapsible`, `context-menu`, `dropdown-menu`, `input`, `skeleton`, `tooltip`, `src/hooks/use-mobile.ts`)
+- Cek hasil add: import `@/components/ui/...` hardcode dari registry pihak ketiga harus disesuaikan ke alias proyek; ikon ikut `iconLibrary` (`lucide-react`).
+- Next.js ini breaking changes. Baca `node_modules/next/dist/docs/` sebelum tulis kode. Patuhi deprecation.
+- `AGENTS.md` auto-generate oleh `next dev`. Jangan hapus manual.
+- Gaya repo: hapus dulu, tulis paling sedikit yang jalan. Tanpa abstraksi pesanan (tanpa barrel `index.ts` sampai impor lintas-route butuh).
+
+## Perintah
+- `npm run dev` — dev server
+- `npm run build` / `npm run start` — build/start
+- `npm run lint` — `eslint`
+- Verifikasi standar tiap ubah UI: `npx.cmd tsc --noEmit --skipLibCheck`, lalu `npx.cmd eslint <file>`. PowerShell: panggil via `npx.cmd`/`npm.cmd`, bukan `npx`/`npm` langsung (execution policy).
+- `next build` pernah hijau (routes `/`, `/login`, `/dashboard`), tapi output log kepotong di runner. Jangan klaim hijau ulang tanpa run baru.
+- DB: `npx.cmd prisma validate` (hijau 2026-09-16), `npx.cmd prisma generate`, `npx.cmd prisma migrate dev`. Ikut skill `prisma-cli`, bukan hafalan flags.
+
+## MCP (`opencode.json`, semua `enabled:true`, `type:local`)
+- `next-devtools` — `npx -y next-devtools-mcp@latest` — error/route/build/cache dev server
+- `shadcn` — `npx shadcn@latest mcp` — tambah/cari komponen
+- `magicuidesign-mcp` — `npx -y @magicuidesign/mcp@latest` — registry Magic UI
+
+## Skills (`.agents/skills/`, 16, sesuai `skills-lock.json`)
+- `shadcn` — kelola komponen shadcn
+- `migrate-radix-to-base` — migrasi Radix → Base UI
+- `next-dev-loop` — verifikasi runtime via `next dev` + browser
+- `next-cache-components-adoption` / `next-cache-components-optimizer` — Cache Components
+- `next-partial-prefetching-adoption` / `next-partial-prefetching-optimizer` — Partial Prefetching
+- Prisma resmi (`prisma/skills`): `prisma-cli` (init/generate/migrate/db/studio), `prisma-client-api` (query + pola singleton `globalThis`), `prisma-database-setup` (+ `references/mysql.md`: adapter `@prisma/adapter-mariadb`), `prisma-driver-adapter-implementation` (adaptor kustom saja), `prisma-postgres` / `prisma-postgres-setup` / `prisma-compute` (tidak terpakai, provider proyek = mysql), `prisma-mongodb-upgrade` (tidak terpakai; MongoDB = tetap v6, bukan v7), `prisma-upgrade-v7` (sudah v7, arsip migrasi)
 
 ## Utang / next
 - DB: belum model, belum migrasi, belum singleton `globalThis`, belum query dipakai (`src/lib/prisma.ts` tak terimpor). Nama config `prisma7.config.ts` non-standar. `prisma.ts` (pecahan HOST/PORT/...) vs `prisma7.config.ts` (`DATABASE_URL`) dua sumber — satukan later. Prompt Prisma tawarkan upgrade 8.0.0-rc — abaikan (tetap 7.10.0 stabil).
