@@ -27,7 +27,7 @@ export function SidebarNavMain() {
           <SidebarMenuItem key={title}>
             <SidebarMenuButton
               tooltip={title}
-              isActive={pathname === url}
+              isActive={pathname === url || pathname.startsWith(`${url}/`)}
               render={<Link href={url} />}
             >
               <Icon />

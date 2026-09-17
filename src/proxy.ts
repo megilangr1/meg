@@ -12,7 +12,12 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAuthPage = pathname === "/login";
-  const protectedPaths = ["/dashboard", "/master-data", "/pendataan-area"];
+  const protectedPaths = [
+    "/dashboard",
+    "/master-data",
+    "/pendataan-area",
+    "/akun-pengguna",
+  ];
 
   const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
 
@@ -24,6 +29,12 @@ export async function proxy(request: NextRequest) {
   } else if (isProtected) {
     const sesCheck = await getSession();
     if (!sesCheck) return NextResponse.redirect(new URL("/login", request.url));
+
+    if (
+      pathname.startsWith("/akun-pengguna") &&
+      (sesCheck.user as { role?: string }).role !== "admin"
+    )
+      return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();
