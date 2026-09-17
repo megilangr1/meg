@@ -2,19 +2,36 @@
   "mcp": {
     "next-devtools": {
       "type": "local",
-      "command": ["npx", "-y", "next-devtools-mcp@latest"],
+      "command": [
+        "npx",
+        "-y",
+        "next-devtools-mcp@latest"
+      ],
       "environment": {},
       "enabled": true
     },
     "shadcn": {
       "type": "local",
-      "command": ["npx", "shadcn@latest", "mcp"],
+      "command": [
+        "npx",
+        "shadcn@latest",
+        "mcp"
+      ],
       "enabled": true
     },
     "magicuidesign-mcp": {
       "type": "local",
-      "command": ["npx", "-y", "@magicuidesign/mcp@latest"],
+      "command": [
+        "npx",
+        "-y",
+        "@magicuidesign/mcp@latest"
+      ],
       "environment": {},
+      "enabled": true
+    },
+    "better-auth": {
+      "type": "remote",
+      "url": "https://mcp.better-auth.com/mcp",
       "enabled": true
     }
   },

@@ -39,6 +39,7 @@ Canonical URL: `https://meggi.dev`
 - **Magic UI registry** (`@magicui`): `bento-grid`, `blur-fade`, `marquee`, `globe` (+ `cobe`)
 - **Fonts:** Outfit (`--font-sans`) + Geist / Geist Mono
 - **Database:** Prisma ORM 7.10.0 + `@prisma/adapter-mariadb`, provider `mysql` → MariaDB on XAMPP (`localhost:3306/meg`)
+- **Auth:** Better Auth 1.7.5 (email/password + admin plugin, Prisma adapter)
 - **Brand assets:** `public/brand/logo*.png` (`*-clear.png` = transparent variant), favicons in `public/favicons/`, login banner in `public/image/login-banner.jpg`
 
 ## Getting Started
@@ -64,14 +65,11 @@ Needed vars (see `.env.example`):
 
 ```env
 DATABASE_URL="mysql://root:@localhost:3306/meg"
-DATABASE_HOST=localhost
-DATABASE_PORT=3306
-DATABASE_USER=root
-DATABASE_PASSWORD=
-DATABASE_NAME=meg
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET= # generate: openssl rand -base64 32
 ```
 
-> Note: `.env*` is gitignored. `src/lib/prisma.ts` currently reads the split `DATABASE_*` vars, while `prisma7.config.ts` reads `DATABASE_URL` — unify to one source when DB goes live.
+> Note: `.env*` is gitignored. `DATABASE_URL` is the single connection source (`src/lib/prisma.ts`, `prisma/seed/`, `prisma.config.ts`).
 
 ### Database
 
@@ -79,9 +77,10 @@ DATABASE_NAME=meg
 npx.cmd prisma validate
 npx.cmd prisma generate
 npx.cmd prisma migrate dev
+npx.cmd prisma db seed
 ```
 
-Schema (`prisma/schema.prisma`) is currently empty — no models, no migrations yet.
+Schema (`prisma/schema.prisma`) has Better Auth models (`User`/`Session`/`Account`/`Verification` + admin fields), migration `20260917034125_init_auth` applied, seed via `prisma db seed` (admin + test user).
 
 ### Scripts
 
@@ -121,17 +120,22 @@ src/
         app-sidebar.tsx       # assembles 4 sidebar partials
         app-header.tsx        # SidebarTrigger + Separator
         sidebar/              # brand, nav-main, nav-other, user-info
+    api/auth/[...all]/route.ts  # Better Auth gateway (toNextJsHandler)
   components/ui/              # avatar, badge, bento-grid, blur-fade, button, card,
                               # collapsible, context-menu, dropdown-menu, globe,
                               # input, marquee, separator, sheet, sidebar,
                               # skeleton, tooltip
   hooks/use-mobile.ts         # from sidebar CLI, do not hand-write
   lib/
-    prisma.ts                 # PrismaMariaDb + PrismaClient (unused so far)
+    auth.ts                   # betterAuth: prismaAdapter + emailAndPassword + admin/nextCookies
+    auth-client.ts            # createAuthClient + adminClient (no baseURL, same-domain)
+    prisma.ts                 # PrismaMariaDb(DATABASE_URL) + PrismaClient singleton
     utils.ts                  # re-export cn
 prisma/
-  schema.prisma
-  prisma7.config.ts           # non-standard name (vs prisma.config.ts), works via auto-load
+  schema.prisma               # User/Session/Account/Verification (+ admin fields)
+  migrations/20260917034125_init_auth/
+  seed/                       # index.ts + auth.seed.ts (admin + test user)
+  prisma.config.ts
 ```
 
 Full internal notes: [`PROJECT.md`](./PROJECT.md)
@@ -148,8 +152,8 @@ Full internal notes: [`PROJECT.md`](./PROJECT.md)
 
 ## Roadmap
 
-- [ ] DB: first model + migration, `globalThis` singleton, single env source
-- [ ] Auth: login form (`Field` + `Input` + `Button` via CLI), `(auth)/layout`, real session for `/dashboard`
+- [x] DB: models + migration + singleton + single env source (`DATABASE_URL`) + seed
+- [ ] Auth: login form (`Field` + `Input` + `Button` via CLI), `(auth)/layout`, real session for `/dashboard` (backend ready: `auth.ts`, `/api/auth/*`, 2 seeded users)
 - [ ] Dashboard: replace `meg@mail.com` dummy, fix `<a href="#">`, real content
 - [ ] Content: real projects/services + case studies, dedicated contact section (currently `#contact` lives inside About)
 
