@@ -1,5 +1,6 @@
 "use client";
 
+import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -22,16 +23,19 @@ export default function SiteSidebar({
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="md:hidden"
-        aria-label="Open menu"
-        onClick={() => setOpen(true)}
-      >
-        <Menu />
-        <span className="sr-only">Open menu</span>
-      </Button>
+      <div className="flex items-center gap-2 md:hidden">
+        <ModeToggle />
+
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Open menu"
+          onClick={() => setOpen(true)}
+        >
+          <Menu />
+          <span className="sr-only">Open menu</span>
+        </Button>
+      </div>
 
       <Sheet open={open} onOpenChange={(value) => setOpen(value)}>
         <SheetContent side="right" className="gap-0">
