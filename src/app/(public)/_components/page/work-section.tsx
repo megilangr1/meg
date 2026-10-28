@@ -169,8 +169,8 @@ export function WorkSection() {
               Recent projects
             </h2>
             <p className="text-muted-foreground">
-              Three builds, three shapes. Each row: what it is, what it
-              shipped, what it measured.
+              Three builds, three shapes. Each row: what it is, what it shipped,
+              what it measured.
             </p>
           </div>
           <Button
@@ -188,13 +188,9 @@ export function WorkSection() {
         {projects.map((p, i) => (
           <BlurFade key={p.title} delay={i * 0.05} inView>
             <article className="grid items-center gap-8 lg:grid-cols-2">
-              <div
-                className={
-                  i % 2 === 1 ? "lg:order-2" : undefined
-                }
-              >
-                <div className="relative aspect-[4/3] overflow-hidden rounded-xl border bg-muted/40">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
+              <div className={i % 2 === 1 ? "lg:order-2" : undefined}>
+                <div className="relative aspect-4/3 overflow-hidden rounded-xl border bg-muted/40">
+                  <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent" />
                   <div className="relative h-full">
                     <ProjectVisual kind={p.visual} />
                   </div>
@@ -234,7 +230,10 @@ export function WorkSection() {
                   ))}
                 </dl>
                 <div className="flex flex-wrap gap-2">
-                  <Button render={<Link href="#contact" />} nativeButton={false}>
+                  <Button
+                    render={<Link href="#contact" />}
+                    nativeButton={false}
+                  >
                     View case study
                     <ArrowUpRight data-icon="inline-end" />
                   </Button>

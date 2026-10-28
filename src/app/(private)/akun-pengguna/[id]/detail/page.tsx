@@ -6,10 +6,7 @@ import { Ban, Edit, List } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
 import { USER_ROLE } from "@/modules/user/user.schema";
 import { UserActions } from "../../_components/user-actions";
@@ -68,7 +65,7 @@ export default async function Page({
       </div>
 
       <Card className="gap-0 overflow-hidden py-0">
-        <div className="h-24 bg-gradient-to-r from-primary/20 via-muted to-muted sm:h-28" />
+        <div className="h-24 bg-linear-to-r from-primary/20 via-muted to-muted sm:h-28" />
         <CardContent className="flex flex-col gap-5 p-4 sm:p-6">
           <div className="-mt-12 flex flex-col gap-4 sm:-mt-14 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
