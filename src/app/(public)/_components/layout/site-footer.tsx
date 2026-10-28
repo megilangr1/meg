@@ -12,13 +12,16 @@ export function SiteFooter() {
             <Image
               src="/brand/logo-clear.png"
               alt="MeGGi"
-              width={96}
+              width={24}
               height={24}
-              className="h-6 w-auto dark:invert"
+              className="dark:invert"
               loading="eager"
             />
           </div>
-          <nav className="flex gap-4 text-sm text-muted-foreground">
+          <nav
+            aria-label="Footer"
+            className="flex gap-4 text-sm text-muted-foreground"
+          >
             <Link href="#services" className="hover:text-foreground">
               Services
             </Link>

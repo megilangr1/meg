@@ -6,7 +6,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-export function SidebarBrand() {
+export function SidebarBrand({ role }: { role?: string | null }) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -20,7 +20,9 @@ export function SidebarBrand() {
           />
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-medium">MeGGi.dev</span>
-            <span className="truncate text-xs">Admin</span>
+            <span className="truncate text-xs">
+              {role === "admin" ? "Admin" : "Klien"}
+            </span>
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>

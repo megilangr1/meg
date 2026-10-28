@@ -9,11 +9,11 @@ import { SidebarBrand } from "./sidebar/sidebar-brand";
 import { SidebarUserInfo } from "./sidebar/sidebar-user-info";
 import { SidebarNavOther } from "./sidebar/sidebar-nav-other";
 
-const AppSidebar = () => {
+const AppSidebar = ({ role }: { role?: string | null }) => {
   return (
-    <Sidebar variant="inset">
+    <Sidebar variant="inset" role="navigation" aria-label="Sidebar">
       <SidebarHeader>
-        <SidebarBrand />
+        <SidebarBrand role={role} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarNavMain />

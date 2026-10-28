@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 
 export function AboutSection() {
   return (
-    <section id="about" className="flex flex-col gap-6">
+    <section id="about" className="flex scroll-mt-24 flex-col gap-6">
       <BlurFade delay={0} inView>
         <Card>
           <div className="grid gap-6 p-6 md:grid-cols-2 md:p-8">
@@ -35,7 +35,10 @@ export function AboutSection() {
                 delete first, then write least code that holds.
               </p>
             </div>
-            <div id="contact" className="flex flex-col justify-center gap-3">
+            <div
+              id="contact"
+              className="flex scroll-mt-24 flex-col justify-center gap-3"
+            >
               <Button
                 size="lg"
                 render={<Link href="mailto:hello@meggi.dev" />}

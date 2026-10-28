@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { List } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { UserForm } from "../_components/user-form";
+
+export const metadata: Metadata = {
+  title: "Tambah Pengguna",
+};
 
 export default function Page() {
   return (

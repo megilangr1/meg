@@ -4,6 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { BlurFade } from "@/components/ui/blur-fade";
 
+const cardBackground = (
+  <div className="absolute inset-0 bg-muted/40 [mask-image:linear-gradient(to_bottom,black_55%,transparent)]" />
+);
+
 const services = [
   {
     Icon: Code,
@@ -12,9 +16,7 @@ const services = [
     href: "#contact",
     cta: "Discuss project",
     className: "col-span-3 lg:col-span-2",
-    background: (
-      <div className="absolute inset-0 bg-muted/40 [mask-image:linear-gradient(to_bottom,black_55%,transparent)]" />
-    ),
+    background: cardBackground,
   },
   {
     Icon: Palette,
@@ -23,9 +25,7 @@ const services = [
     href: "#contact",
     cta: "Discuss project",
     className: "col-span-3 lg:col-span-1",
-    background: (
-      <div className="absolute inset-0 bg-muted/40 [mask-image:linear-gradient(to_bottom,black_55%,transparent)]" />
-    ),
+    background: cardBackground,
   },
   {
     Icon: Rocket,
@@ -34,9 +34,7 @@ const services = [
     href: "#contact",
     cta: "Discuss project",
     className: "col-span-3 lg:col-span-1",
-    background: (
-      <div className="absolute inset-0 bg-muted/40 [mask-image:linear-gradient(to_bottom,black_55%,transparent)]" />
-    ),
+    background: cardBackground,
   },
   {
     Icon: Zap,
@@ -45,15 +43,13 @@ const services = [
     href: "#contact",
     cta: "Discuss project",
     className: "col-span-3 lg:col-span-2",
-    background: (
-      <div className="absolute inset-0 bg-muted/40 [mask-image:linear-gradient(to_bottom,black_55%,transparent)]" />
-    ),
+    background: cardBackground,
   },
 ];
 
 export function ServicesSection() {
   return (
-    <section id="services" className="flex flex-col gap-6">
+    <section id="services" className="flex scroll-mt-24 flex-col gap-6">
       <BlurFade delay={0} inView>
         <div className="flex max-w-2xl flex-col gap-2">
           <Badge className="w-fit" variant="outline">

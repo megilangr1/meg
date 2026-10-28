@@ -41,7 +41,7 @@ export default function SiteSidebar({
               Navigate sections and get in touch.
             </SheetDescription>
           </SheetHeader>
-          <nav className="flex flex-col gap-1 py-2">
+          <nav aria-label="Mobile" className="flex flex-col gap-1 py-2">
             {nav.map((n) => (
               <Link
                 key={n.href}

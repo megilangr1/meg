@@ -74,7 +74,9 @@ export function SidebarNavMain() {
 
         <SidebarGroup>
           <SidebarMenu>
-            <SidebarMenuSkeleton showIcon />
+            <SidebarMenuItem>
+              <SidebarMenuSkeleton showIcon />
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
       </>

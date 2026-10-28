@@ -281,6 +281,7 @@ export function UserTable({
                   <Tooltip>
                     <TooltipTrigger
                       render={<Link href={`/akun-pengguna/${user.id}/detail`} />}
+                      aria-label={`Detail data ${user.name}`}
                       className={ACTION_HIT}
                     >
                       <Eye className="size-4" />
@@ -290,6 +291,7 @@ export function UserTable({
                   <Tooltip>
                     <TooltipTrigger
                       render={<Link href={`/akun-pengguna/${user.id}/edit`} />}
+                      aria-label={`Edit data ${user.name}`}
                       className={ACTION_HIT}
                     >
                       <Edit className="size-4" />

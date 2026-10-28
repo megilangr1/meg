@@ -23,8 +23,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import LogoutButton from "@/components/shared/logout-button";
+
+function initials(name: string) {
+  return (
+    name
+      .split(" ")
+      .map((part) => part.charAt(0))
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "U"
+  );
+}
 
 export function SidebarUserInfo() {
   const { isMobile } = useSidebar();
@@ -40,7 +51,10 @@ export function SidebarUserInfo() {
     return (
       <SidebarMenu>
         <SidebarMenuItem className="border-t">
-          <SidebarMenuButton className="flex items-center justify-center py-2 gap-2">
+          <SidebarMenuButton
+            aria-label="Memuat sesi"
+            className="flex items-center justify-center gap-2 py-2"
+          >
             <Loader2 className="size-4 shrink-0 animate-spin" />
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -53,11 +67,11 @@ export function SidebarUserInfo() {
       <SidebarMenu>
         <SidebarMenuItem className="border-t">
           <div
-            className="flex items-center justify-center py-2 gap-2 text-red-600 text-xs cursor-pointer"
+            className="flex cursor-pointer items-center justify-center gap-2 py-2 text-xs text-destructive"
             onClick={() => refetch()}
           >
             <TriangleAlert className="size-4 shrink-0" />
-            <span>Something Went Wrong !</span>
+            <span>Terjadi kesalahan!</span>
 
             <RotateCcw className="size-3 shrink-0" />
           </div>
@@ -74,16 +88,14 @@ export function SidebarUserInfo() {
             render={<DropdownMenuTrigger className="cursor-pointer" />}
             className="py-8"
           >
-            <div className="relative h-8">
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={"/image/login-banner.jpg"}
-                  alt={session.user.name}
-                />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
-              <div className="bg-black/50 absolute inset-0 rounded-full"></div>
-            </div>
+            <Avatar className="size-8 rounded-lg">
+              {session.user.image && (
+                <AvatarImage src={session.user.image} alt={session.user.name} />
+              )}
+              <AvatarFallback className="rounded-lg">
+                {initials(session.user.name)}
+              </AvatarFallback>
+            </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">
                 {session.user.name}
@@ -95,7 +107,7 @@ export function SidebarUserInfo() {
         </SidebarMenuItem>
 
         <DropdownMenuContent
-          className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+          className="w-(--anchor-width) min-w-56 rounded-lg"
           side={isMobile ? "bottom" : "right"}
           align="end"
           sideOffset={4}
@@ -103,12 +115,16 @@ export function SidebarUserInfo() {
           <DropdownMenuGroup>
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={"/image/login-banner.jpg"}
-                    alt={session.user.name}
-                  />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <Avatar className="size-8 rounded-lg">
+                  {session.user.image && (
+                    <AvatarImage
+                      src={session.user.image}
+                      alt={session.user.name}
+                    />
+                  )}
+                  <AvatarFallback className="rounded-lg">
+                    {initials(session.user.name)}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
@@ -120,12 +136,6 @@ export function SidebarUserInfo() {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              render={<Link href={"#"} className="cursor-pointer" />}
-            >
-              Profile
-            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>

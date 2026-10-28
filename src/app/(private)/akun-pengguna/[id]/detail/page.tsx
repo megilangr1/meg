@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -12,6 +13,10 @@ import {
 import { auth } from "@/lib/auth";
 import { USER_ROLE } from "@/modules/user/user.schema";
 import { UserActions } from "../../_components/user-actions";
+
+export const metadata: Metadata = {
+  title: "Detail Pengguna",
+};
 
 function initials(name: string) {
   return name

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { Plus } from "lucide-react";
@@ -11,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { getSession } from "@/lib/session";
 import {
   USER_DEFAULT_LIMIT,
   USER_DEFAULT_SORT,
@@ -21,6 +23,10 @@ import {
   userSearchFieldSchema,
 } from "@/modules/user/user.schema";
 import { UserTable } from "./_components/user-table";
+
+export const metadata: Metadata = {
+  title: "Akun Pengguna",
+};
 
 type ListSearchParams = {
   q?: string;
@@ -59,7 +65,7 @@ export default async function Page({
   const { sortBy, sortDirection } = USER_SORT_MAP[sort];
 
   const [session, result] = await Promise.all([
-    auth.api.getSession({ headers: heads }),
+    getSession(),
     auth.api.listUsers({
       query: {
         searchValue: q || undefined,

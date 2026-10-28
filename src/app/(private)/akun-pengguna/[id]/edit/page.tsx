@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -14,6 +15,10 @@ import {
 import { auth } from "@/lib/auth";
 import { USER_ROLE } from "@/modules/user/user.schema";
 import { UserForm } from "../../_components/user-form";
+
+export const metadata: Metadata = {
+  title: "Edit Pengguna",
+};
 
 export default async function Page({
   params,

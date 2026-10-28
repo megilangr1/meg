@@ -12,12 +12,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAuthPage = pathname === "/login";
-  const protectedPaths = [
-    "/dashboard",
-    "/master-data",
-    "/pendataan-area",
-    "/akun-pengguna",
-  ];
+  const protectedPaths = ["/dashboard", "/akun-pengguna"];
 
   const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
 
@@ -41,5 +36,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };

@@ -158,7 +158,7 @@ function ProjectVisual({ kind }: { kind: "dashboard" | "site" | "system" }) {
 
 export function WorkSection() {
   return (
-    <section id="work" className="flex flex-col gap-12">
+    <section id="work" className="flex scroll-mt-24 flex-col gap-12">
       <BlurFade delay={0} inView>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="flex max-w-2xl flex-col gap-2">
@@ -186,7 +186,7 @@ export function WorkSection() {
 
       <div className="flex flex-col gap-12">
         {projects.map((p, i) => (
-          <BlurFade key={p.title} delay={0} inView>
+          <BlurFade key={p.title} delay={i * 0.05} inView>
             <article className="grid items-center gap-8 lg:grid-cols-2">
               <div
                 className={

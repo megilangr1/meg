@@ -45,7 +45,6 @@ const LoginForm = () => {
         email: formData.email,
         password: formData.password,
         rememberMe: false,
-        callbackURL: process.env.NEXT_PUBLIC_APP_URL + "/dashboard",
         fetchOptions: {
           onSuccess: () => {
             doAlert("Login berhasil", 1);

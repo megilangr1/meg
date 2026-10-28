@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/lib/site";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -18,30 +20,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://meggi.dev"),
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: "MeGGi dev — fast web apps",
-    template: "%s | MeGGi dev",
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
   },
-  description:
-    "MeGGi dev builds fast web apps. Full-stack Next.js developer. Clean UI, solid architecture, no bloat.",
-  applicationName: "MeGGi dev",
-  authors: [{ name: "MeGGi dev" }],
-  creator: "MeGGi dev",
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
   keywords: ["MeGGi dev", "Next.js", "React", "portfolio", "web developer"],
-  alternates: { canonical: "/" },
   openGraph: {
-    title: "MeGGi dev — fast web apps",
+    title: siteConfig.title,
     description:
       "Full-stack Next.js developer. Clean UI, solid architecture, no bloat.",
     url: "/",
-    siteName: "MeGGi dev",
-    locale: "en_US",
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "MeGGi dev — fast web apps",
+    title: siteConfig.title,
     description:
       "Full-stack Next.js developer. Clean UI, solid architecture, no bloat.",
   },
@@ -73,6 +73,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  colorScheme: "light dark",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#09090b" },
@@ -83,9 +84,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         "h-full",
-        "antialiased",
+        "scroll-pt-20 scroll-smooth antialiased motion-reduce:scroll-auto",
         geistSans.variable,
         geistMono.variable,
         "font-sans",
@@ -93,9 +95,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       )}
     >
       <body>
-        <TooltipProvider>{children}</TooltipProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TooltipProvider>{children}</TooltipProvider>
 
-        <Toaster />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

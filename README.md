@@ -26,16 +26,18 @@ Portfolio site for **MeGGi dev**, built with the Next.js App Router. Three areas
 | Route | Area | Status |
 | --- | --- | --- |
 | `/` | Public landing — hero, stack, services, work, about | Live sections, content still placeholder |
-| `/login` | Auth — split-screen with banner image | UI shell only, no form yet |
+| `/login` | Auth — split-screen with banner image | Email/password form + error map |
 | `/dashboard` | Private app — sidebar + header layout | Placeholder page |
+| `/akun-pengguna` | Admin CRUD for `role=user` accounts | List, create, detail, edit, ban/unban, delete |
 
-Canonical URL: `https://meggi.dev`
+Canonical URL: `siteConfig.url` (`NEXT_PUBLIC_APP_URL`, fallback `https://meggi.dev`).
 
 ## Stack
 
 - **Framework:** Next.js 16.3.5 (App Router), React 19.2.8, TypeScript strict
 - **Styling:** Tailwind CSS v4, `tw-animate-css`, shadcn style `base-nova` (neutral, CSS vars on)
 - **UI primitives:** `@base-ui/react`, `class-variance-authority`, `lucide-react`, `motion`
+- **Dark mode:** `next-themes` (class strategy, default `system`) + `ThemeToggle` (Light/Dark/System)
 - **Magic UI registry** (`@magicui`): `bento-grid`, `blur-fade`, `marquee`, `globe` (+ `cobe`)
 - **Fonts:** Outfit (`--font-sans`) + Geist / Geist Mono
 - **Database:** Prisma ORM 7.10.0 + `@prisma/adapter-mariadb`, provider `mysql` → MariaDB on XAMPP (`localhost:3306/meg`)
@@ -64,6 +66,7 @@ cp .env.example .env
 Needed vars (see `.env.example`):
 
 ```env
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 DATABASE_URL="mysql://root:@localhost:3306/meg"
 BETTER_AUTH_URL=http://localhost:3000
 BETTER_AUTH_SECRET= # generate: openssl rand -base64 32
@@ -89,12 +92,13 @@ Schema (`prisma/schema.prisma`) has Better Auth models (`User`/`Session`/`Accoun
 | `npm run dev` | Dev server |
 | `npm run build` / `npm run start` | Production build / start |
 | `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript (`tsc --noEmit`) |
 
 Verify UI changes with:
 
 ```bash
-npx.cmd tsc --noEmit --skipLibCheck
-npx.cmd eslint <file>
+npm.cmd run typecheck
+npx.cmd eslint src --max-warnings=0
 ```
 
 > PowerShell: use `npx.cmd` / `npm.cmd` (execution policy).
@@ -104,32 +108,38 @@ npx.cmd eslint <file>
 ```text
 src/
   app/
-    layout.tsx                # root: fonts, metadata, viewport themeColor
+    layout.tsx                # root: fonts, metadata, ThemeProvider, viewport
+    error.tsx                 # error boundary
+    not-found.tsx             # 404
+    robots.ts / sitemap.ts    # SEO routes
+    opengraph-image.tsx       # OG image (twitter-image re-export)
     (public)/
       layout.tsx              # SiteHeader + content + SiteFooter
-      page.tsx                # assembles 5 sections only
+      page.tsx                # 5 sections + canonical + JSON-LD
       _components/
         layout/               # site-header, site-sidebar (mobile Sheet), site-footer
         page/                 # hero, stack-marquee, services, work, about
     (auth)/
-      login/page.tsx          # /login split-screen shell
+      login/page.tsx          # split-screen + form + theme toggle
+      login/_components/      # login-form
     (private)/
-      layout.tsx              # SidebarProvider + AppSidebar + SidebarInset + AppHeader
+      layout.tsx              # server session guard + sidebar/inset/header
+      loading.tsx             # skeleton
       dashboard/page.tsx      # /dashboard placeholder
-      _components/
-        app-sidebar.tsx       # assembles 4 sidebar partials
-        app-header.tsx        # SidebarTrigger + Separator
-        sidebar/              # brand, nav-main, nav-other, user-info
-    api/auth/[...all]/route.ts  # Better Auth gateway (toNextJsHandler)
-  components/ui/              # avatar, badge, bento-grid, blur-fade, button, card,
-                              # collapsible, context-menu, dropdown-menu, globe,
-                              # input, marquee, separator, sheet, sidebar,
-                              # skeleton, tooltip
+      akun-pengguna/          # list/create/detail/edit + admin layout guard
+      _components/            # app-sidebar, app-header, sidebar/*
+    api/auth/[...all]/route.ts # Better Auth gateway (toNextJsHandler)
+  components/
+    theme-provider.tsx        # next-themes wrapper
+    shared/                   # logout-button, theme-toggle
+    ui/                       # shadcn/base + Magic UI components
   hooks/use-mobile.ts         # from sidebar CLI, do not hand-write
   lib/
     auth.ts                   # betterAuth: prismaAdapter + emailAndPassword + admin/nextCookies
     auth-client.ts            # createAuthClient + adminClient (no baseURL, same-domain)
     prisma.ts                 # PrismaMariaDb(DATABASE_URL) + PrismaClient singleton
+    session.ts                # cached getSession for layouts/pages
+    site.ts                   # siteConfig for metadata/robots/sitemap/JSON-LD
     utils.ts                  # re-export cn
 prisma/
   schema.prisma               # User/Session/Account/Verification (+ admin fields)
@@ -144,8 +154,9 @@ Full internal notes: [`PROJECT.md`](./PROJECT.md)
 
 - **Components:** never copy-paste — always `npx shadcn@latest add <item>`, then read the result and fix imports/icons before moving on.
 - **Base UI, not Radix:** link-buttons use `Button render={<Link href />} nativeButton={false}`. Never `Link > Button`.
-- **Forms (when login lands):** `FieldGroup` + `Field` + `FieldLabel`, not raw divs.
+- **Forms:** `FieldGroup` + `Field` + `FieldLabel`, not raw divs.
 - **`page.tsx` assembles sections, `layout.tsx` assembles chrome.** Dummy data stays in the section file until real content arrives.
+- **Dark mode:** semantic tokens only; `next-themes` class strategy. `dark:` is reserved for the logo invert and the toggle icon animation.
 - **Logo:** always `*-clear.png` (transparent) + `dark:invert`. Never swap files per theme.
 - **Spacing:** `flex` + `gap-*`, `size-*`, `cn()` for conditionals. Semantic colors only (`bg-background`, `text-muted-foreground`).
 - **Next.js here has breaking changes** — check `node_modules/next/dist/docs/` before writing framework code.
@@ -153,9 +164,12 @@ Full internal notes: [`PROJECT.md`](./PROJECT.md)
 ## Roadmap
 
 - [x] DB: models + migration + singleton + single env source (`DATABASE_URL`) + seed
-- [ ] Auth: login form (`Field` + `Input` + `Button` via CLI), `(auth)/layout`, real session for `/dashboard` (backend ready: `auth.ts`, `/api/auth/*`, 2 seeded users)
-- [ ] Dashboard: replace `meg@mail.com` dummy, fix `<a href="#">`, real content
-- [ ] Content: real projects/services + case studies, dedicated contact section (currently `#contact` lives inside About)
+- [x] Auth: login form + error map, session guards (proxy + server layouts), admin CRUD
+- [x] Finishing: dark mode, 404/error/loading, SEO (robots/sitemap/OG/JSON-LD), security headers
+- [x] Accessibility: axe 0 violations on `/`, `/login`, `/dashboard`, `/akun-pengguna`, 404 (desktop + mobile)
+- [ ] Dashboard: real content (still placeholder)
+- [ ] Content: real projects/services + case studies, dedicated contact section (currently `#contact` lives inside About), social links in footer
+- [ ] Optional: CI (lint + typecheck + build), analytics
 
 ---
 
