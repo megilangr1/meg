@@ -1,10 +1,17 @@
 import Link from "next/link";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+
+const facts = [
+  { label: "Base", value: "Jakarta, GMT+7" },
+  { label: "Focus", value: "Next.js full-stack" },
+  { label: "Availability", value: "Open for Q1 2027" },
+];
 
 export function AboutSection() {
   return (
@@ -35,21 +42,22 @@ export function AboutSection() {
                 delete first, then write least code that holds.
               </p>
             </div>
-            <div
-              id="contact"
-              className="flex scroll-mt-24 flex-col justify-center gap-3"
-            >
+            <div className="flex flex-col justify-center gap-4">
+              <dl className="flex flex-col gap-3">
+                {facts.map((f) => (
+                  <div
+                    key={f.label}
+                    className="flex items-center justify-between gap-4 text-sm"
+                  >
+                    <dt className="text-muted-foreground">{f.label}</dt>
+                    <dd className="font-medium">{f.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <Separator />
               <Button
-                size="lg"
-                render={<Link href="mailto:hello@meggi.dev" />}
-                nativeButton={false}
-              >
-                <Mail data-icon="inline-start" />
-                hello@meggi.dev
-              </Button>
-              <Button
-                size="lg"
                 variant="outline"
+                className="w-fit"
                 render={<Link href="/dashboard" />}
                 nativeButton={false}
               >

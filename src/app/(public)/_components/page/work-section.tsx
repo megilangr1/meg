@@ -70,7 +70,7 @@ function ProjectVisual({ kind }: { kind: "dashboard" | "site" | "system" }) {
           {["MRR", "Active", "Churn"].map((k) => (
             <div key={k} className="rounded-lg border bg-background p-3">
               <p className="text-[11px] text-muted-foreground">{k}</p>
-              <div className="mt-1 h-2 w-3/4 rounded-full bg-primary/70" />
+              <div className="mt-1 h-2 w-3/4 rounded-full bg-brand/70" />
             </div>
           ))}
         </div>
@@ -79,7 +79,7 @@ function ProjectVisual({ kind }: { kind: "dashboard" | "site" | "system" }) {
             <div
               key={i}
               style={{ height: `${h}%` }}
-              className="w-full rounded-sm bg-primary/80 first:bg-muted-foreground/40"
+              className="w-full rounded-sm bg-brand/80 first:bg-muted-foreground/40"
             />
           ))}
         </div>
@@ -104,7 +104,7 @@ function ProjectVisual({ kind }: { kind: "dashboard" | "site" | "system" }) {
           <div className="mt-1 h-2 w-3/4 rounded-full bg-muted-foreground/50" />
           <div className="h-2 w-2/3 rounded-full bg-muted-foreground/50" />
           <div className="mt-3 flex gap-2">
-            <div className="h-7 w-24 rounded-md bg-primary" />
+            <div className="h-7 w-24 rounded-md bg-brand" />
             <div className="h-7 w-24 rounded-md border bg-background" />
           </div>
         </div>
@@ -133,7 +133,7 @@ function ProjectVisual({ kind }: { kind: "dashboard" | "site" | "system" }) {
         </span>
       </div>
       <div className="grid flex-1 grid-cols-4 gap-3">
-        <div className="rounded-lg bg-primary" />
+        <div className="rounded-lg bg-brand" />
         <div className="rounded-lg bg-secondary" />
         <div className="rounded-lg bg-accent" />
         <div className="rounded-lg bg-muted" />
@@ -190,7 +190,7 @@ export function WorkSection() {
             <article className="grid items-center gap-8 lg:grid-cols-2">
               <div className={i % 2 === 1 ? "lg:order-2" : undefined}>
                 <div className="relative aspect-4/3 overflow-hidden rounded-xl border bg-muted/40">
-                  <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-br from-brand/10 via-transparent to-transparent" />
                   <div className="relative h-full">
                     <ProjectVisual kind={p.visual} />
                   </div>

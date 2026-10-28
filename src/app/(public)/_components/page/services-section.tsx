@@ -5,7 +5,7 @@ import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { BlurFade } from "@/components/ui/blur-fade";
 
 const cardBackground = (
-  <div className="absolute inset-0 bg-muted/40 mask-[linear-gradient(to_bottom,black_55%,transparent)]" />
+  <div className="absolute inset-0 bg-linear-to-b from-brand/10 via-brand/5 to-transparent mask-[linear-gradient(to_bottom,black_55%,transparent)]" />
 );
 
 const services = [

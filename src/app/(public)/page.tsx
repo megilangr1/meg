@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { siteConfig } from "@/lib/site";
 import { AboutSection } from "./_components/page/about-section";
+import { CtaSection } from "./_components/page/cta-section";
 import { HeroSection } from "./_components/page/hero-section";
 import { ServicesSection } from "./_components/page/services-section";
 import { StackMarquee } from "./_components/page/stack-marquee";
@@ -33,6 +34,7 @@ export default function Page() {
       <ServicesSection />
       <WorkSection />
       <AboutSection />
+      <CtaSection />
     </main>
   );
 }
