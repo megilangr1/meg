@@ -1,0 +1,41 @@
+services:
+  # one-shot: migrate + seed against db, then exits; app waits for it
+  migrate:
+    build:
+      context: .
+      target: migrator
+      args:
+        NEXT_PUBLIC_APP_URL: "https://meggi.chiro-it.site"
+    image: meggi-web:migrator
+    container_name: meggi-migrate
+    restart: "no"
+    environment:
+      DATABASE_URL: "mysql://${DB_USER}:${DB_PASSWORD}@172.17.0.1:3306/${DB_NAME}"
+    networks: [meg]
+
+  app:
+    build:
+      context: .
+      target: runner
+      args:
+        NEXT_PUBLIC_APP_URL: "https://meggi.chiro-it.site"
+    image: meggi-web:prod
+    container_name: meggi-web
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:3001:3001"
+    environment:
+      DATABASE_URL: "mysql://${DB_USER}:${DB_PASSWORD}@172.17.0.1:3306/${DB_NAME}"
+      BETTER_AUTH_URL: "https://meggi.chiro-it.site"
+      BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET}"
+      PORT: "3001"
+      HOSTNAME: "0.0.0.0"
+    networks: [meg]
+
+networks:
+  meg:
+    name: meggi-net
+    driver: bridge

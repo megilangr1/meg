@@ -12,6 +12,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  output: "standalone",
+  allowedDevOrigins: [
+    "meggi.chiro-it.site",
+    "localhost:3001",
+    "127.0.0.1:3001",
+  ],
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },

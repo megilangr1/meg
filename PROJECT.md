@@ -9,7 +9,10 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - Registry: `@magicui` → `https://magicui.design/r/{name}`
 - Font: Outfit (`--font-sans`) + Geist/Geist_Mono; `font-heading` = `--font-sans`
 - Brand: `public/brand/logo*.png`, favicon: `public/favicons/` + `public/favicon.ico`, auth imagery: `public/image/login-banner.jpg`. Arti `clear` = bg transparan (RGBA, sudut alpha 0), bukan varian dark. Tanpa `clear` = RGB bg putih.
-- DB: Prisma ORM 7.10.0 (`prisma`, `@prisma/client`), adapter `@prisma/adapter-mariadb` + driver `mariadb` 3.4.5 (transitif), provider `mysql` → MariaDB XAMPP `localhost:3306/meg`. DevDeps pendukung: `dotenv`, `tsx`.
+- DB: Prisma ORM 7.10.0 (`prisma`, `@prisma/client`), adapter `@prisma/adapter-mariadb` + driver `mariadb` 3.4.5 (transitif), provider `mysql`.
+  - PC lokal: MariaDB XAMPP `localhost:3306/meg`.
+  - Server dev: MySQL host 8.0.46 `127.0.0.1:3306/meg` (container app mengaksesnya lewat `172.17.0.1:3306`).
+  DevDeps pendukung: `dotenv`, `tsx`.
 - Auth: `better-auth` ^1.7.5 (instal exact 1.7.5, docs = v1.7 line). Env `BETTER_AUTH_SECRET` (min 32 char) + `BETTER_AUTH_URL`.
 
 ## Struktur
@@ -43,14 +46,17 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `prisma/seed/` — `index.ts` (PrismaClient `DATABASE_URL` + lifecycle `then(disconnect)`/`catch(log+disconnect+exit 1)`, jalan via `prisma db seed` EXIT 0) + `auth.seed.ts` (`seedUser` via `auth.api.createUser` sesuai docs admin, guard idempoten `findMany`, 2 user: `admin@mail.com`/admin + `test@mail.com`/user). Semua tracked (sudah commit).
 - `notes.md` — cheat-sheet CLI (`migrate dev/reset`, `generate`, `auth@latest create-admin`). Sudah tracked.
 - `src/generated/prisma/` — output generate, gitignore. Jangan impor manual di luar `src/lib/prisma.ts`.
-- `.env` + `.env.example` — `DATABASE_URL` (satu-satunya sumber koneksi: `prisma.ts`, `seed`, `prisma.config.ts`; var pecahan `DATABASE_HOST/PORT/...` sudah dihapus 2026-09-17) + `BETTER_AUTH_URL`/`BETTER_AUTH_SECRET` (secret generate via `openssl rand -base64 32`). Keduanya gitignore (`.env*`), nilai kredensial dev lokal (XAMPP root tanpa password).
+- `.env` + `.env.example` — `DATABASE_URL` (satu-satunya sumber koneksi: `prisma.ts`, `seed`, `prisma.config.ts`; var pecahan `DATABASE_HOST/PORT/...` sudah dihapus 2026-09-17) + `BETTER_AUTH_URL`/`BETTER_AUTH_SECRET` (secret generate via `openssl rand -base64 32`). Server dev menambah `DB_NAME`/`DB_USER`/`DB_PASSWORD` (kredensial MySQL host, password URL-encoded) khusus untuk substitusi `docker-compose.yml`. `.env` gitignore (`.env*`); `.env.example` tidak memuat nilai server dev.
 - Struktur landing 2026-10-28: hero grid 2 kolom + `DotPattern` brand di belakang teks + kata kunci `text-brand` di h1 + badge dot `bg-brand` pulse + stats strip di bawah hero (`NumberTicker`, border-t, 2x4 grid).
 - `src/components/ui/` — `alert-dialog`, `avatar`, `badge`, `bento-grid`, `blur-fade`, `button`, `card`, `collapsible`, `context-menu`, `dialog`, `dot-pattern`, `dropdown-menu`, `field`, `globe`, `input`, `label`, `marquee`, `number-ticker`, `pagination`, `select`, `separator`, `sheet`, `sidebar`, `skeleton`, `table`, `toast`, `tooltip`
 - `src/components/shared/` — `logout-button.tsx` (`signOut` + `push /`), `theme-toggle.tsx` (dark mode switcher)
 - `src/helpers/client/` — `client.helper.ts` (`doAlert` → `toast.add`)
 - `src/hooks/use-mobile.ts` — bawaan `add sidebar`, dimodifikasi mininmal (init `setIsMobile` via `requestAnimationFrame` agar lolos `react-hooks/set-state-in-effect`). Disimpan sebagai study case pola fix.
 - `src/lib/utils.ts` — re-export `cn` dari `cn`
-- `next.config.ts` — kosong default
+- `next.config.ts` — `poweredByHeader: false` + `output: "standalone"` (wajib untuk image Docker) + security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`) + `allowedDevOrigins` (`meggi.chiro-it.site`, `localhost:3001`, `127.0.0.1:3001`).
+- `Dockerfile` — 4 stage: `dependencies` → `builder` → `migrator` → `runner` (lihat section Serving).
+- `docker-compose.yml` — `migrate` (one-shot) + `app`, network `meggi-net`, publish `127.0.0.1:3001`.
+- `.dockerignore` — buang `node_modules`, `.next`, `src/generated`, `.env*`, `Dockerfile*`, compose, docs, `.git`, `.agents`.
 
 ## Pola _components
 - `(public)/_components/layout/` = chrome (header/sidebar/footer). `(public)/_components/page/` = sections halaman. `(private)/_components/` = chrome app (`app-sidebar`, `app-header`) + `sidebar/` partial (brand/nav-main/nav-other/user-info). `(auth)/_components/` = pecahan `page.tsx` (mis. `login-form.tsx`). Ulangi pola ini untuk route baru.
@@ -107,7 +113,26 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - Verifikasi standar tiap ubah UI: `npm.cmd run typecheck`, lalu `npx.cmd eslint <file>` (atau `npx.cmd eslint src --max-warnings=0`). PowerShell: panggil via `npx.cmd`/`npm.cmd`, bukan `npx`/`npm` langsung (execution policy).
 - `next build` hijau EXIT 0 (2026-09-17, artefak `.next/server/app/akun-pengguna` ada; output log runner kepotong tapi exit code + artefak confirm).
 - DB: `npx.cmd prisma validate` (hijau 2026-09-17), `npx.cmd prisma generate`, `npx.cmd prisma migrate dev`, `npx.cmd prisma db seed` (hijau 2026-09-17, 2 user). Ikut skill `prisma-cli`, bukan hafalan flags. `migrate reset` masih aman (tahap dev, tanpa data real) — model boleh diubah + migrate fresh sesantai mungkin.
-- Auth runtime: `GET /api/auth/ok` → `{"ok":true}` (2026-09-17, dev server `localhost:3000` jalan).
+- Auth runtime: `GET /api/auth/ok` → `{"ok":true}` (2026-09-17 dev lokal `localhost:3000`; 2026-11-05 server dev `:3001`, container `meggi-web` healthy).
+
+## Serving di server dev (2026-11-05)
+- Domain: `https://meggi.chiro-it.site` → nginx (TLS Let's Encrypt, exp 2027-02-03) → `127.0.0.1:3001` (`node server.js`, standalone; `:3000` milik `sivaka-web`, jadi meg pakai 3001).
+- Proses: **Docker production-style** (2026-11-05), bukan `ops/svc`, tanpa hot reload. `docker-compose.yml`: `migrate` (one-shot `prisma migrate deploy` + seed, `target: migrator`) → `app` (`target: runner`, image `meggi-web:prod`), network `meggi-net`. **DB di host, bukan container** (sejak 2026-11-05): MySQL host `127.0.0.1:3306/meg`, diakses container lewat IP gateway docker0 `172.17.0.1:3306` (lihat catatan di bawah). Hanya `127.0.0.1:3001` dipublish.
+- Image mengikuti `examples/with-docker` (canary): stage `dependencies` → `builder` (`next build`, `output: "standalone"`) → `migrator` → `runner` (hanya `.next/standalone` + `.next/static` + `public`, user non-root `nextjs` uid/gid 1001, `CMD ["node", "server.js"]`, `HEALTHCHECK` via `fetch /api/auth/ok`). Tanpa bind mount — image immutable, sumber kebenaran = image, bukan disk host.
+- Ukuran image: `meggi-web:prod` 416MB (dev lama 2.08GB, `migrator` 1.67GB — hanya dipakai sekali jalan).
+- Build-time placeholder: `DATABASE_URL`, `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET` diset dummy di stage `builder` supaya page-data collection tidak gagal; nilai riil datang dari env runtime. `NEXT_PUBLIC_APP_URL` di-inline saat build lewat build-arg.
+- `migrator` wajib `COPY tsconfig.json` — seed pakai alias `@/` dan `tsx` resolve lewat paths tsconfig.
+- DB host butuh grant untuk koneksi non-localhost: `GRANT ALL PRIVILEGES ON \`meg\`.* TO 'romadlona'@'%'` (akun `@'%'` sebelumnya hanya punya grant `dashboard`/`siap`/`verifrka` → `P1010: User was denied access`).
+- **Pakai IP literal `172.17.0.1` (gateway docker0) di `DATABASE_URL`, bukan `host.docker.internal`.** Uji A/B: `@172.17.0.1:3306` → signin 200; `@host.docker.internal` (baik `host-gateway` maupun di-pin ke IP LAN) → driver `mariadb` `pool timeout after 10000ms`; `@192.168.40.5` juga jalan. Jadi rutenya tidak bermasalah dan privilege bukan penyebab — yang gagal adalah koneksi lewat nama host. `prisma migrate` (engine CLI) tetap bisa lewat nama, jadi ini spesifik driver Node.
+- Vhost `/etc/nginx/sites-available/meggi.chiro-it.site` (proxy, header Upgrade + timeout 3600s; `:80` → 301). Dipasang lewat helper root task-scoped `hermes-meggi-web` (staged di `/home/heremes/workspace/meggi-web/setup.sh`).
+- Port satu-satunya knob: `PORT` di `docker-compose.yml` + mapping publish `127.0.0.1:3001:3001` + `proxy_pass` vhost; ubah ketiganya bareng.
+- Kontrol (tanpa sudo bebas, helper task-scoped): `sudo -n /usr/local/libexec/hermes/hermes-meggi-docker {build|up|down|ps|logs|restart|pull|cleanup}`; staged di `/home/heremes/workspace/meggi-docker/setup.sh`. `cleanup` menghapus container `meggi-db`/`meggi-migrate`, image `meggi-web:dev`/`meggi-web:migrator`/`mysql:8.4`/`mariadb:11`, volume `meg_*` sisa, dan `docker builder prune -f`.
+- Alur deploy: ubah kode → `build` → `up` (image immutable, tanpa bind mount, tanpa hot reload). `up` membuat ulang `migrate` bila container/image-nya sudah dibersihkan (rebuild ~1 menit).
+- Bukti runtime terakhir (2026-11-05): `meggi-web` healthy, `/` 200, `/login` 200, `/dashboard` 307, `/akun-pengguna` 307, `/api/auth/ok` 200, `:80` 301, signin 200 → `/dashboard` 200 → `/akun-pengguna` 200, `meg.session` di MySQL host bertambah tiap login. Image: `meggi-web:prod` 416MB; volume Docker 0B; build cache 0B.
+- Env runtime container: `DATABASE_URL` → `mysql://${DB_USER}:${DB_PASSWORD}@172.17.0.1:3306/${DB_NAME}`; `BETTER_AUTH_URL` = `https://meggi.chiro-it.site`. `DB_NAME`/`DB_USER`/`DB_PASSWORD` (password host, URL-encoded) di `.env` (gitignored) dipakai substitusi compose.
+- `.env` server dev: `DATABASE_URL` = `mysql://romadlona:...@127.0.0.1:3306/meg` (untuk CLI di host), `NEXT_PUBLIC_APP_URL` + `BETTER_AUTH_URL` = `https://meggi.chiro-it.site`. Di PC lokal tetap `localhost:3000` / `agencies-backend.test`.
+- `next.config.ts`: `output: "standalone"`; `allowedDevOrigins` (`meggi.chiro-it.site`, `localhost:3001`, `127.0.0.1:3001`) tetap ada untuk saat `npm run dev` lokal.
+- DB `meg` dibuat di server dev (`utf8mb4_unicode_ci`); migrate + `prisma db seed` sudah jalan (`admin@mail.com`/admin, `test@mail.com`/user).
 
 ## MCP (`opencode.json`, semua `enabled:true`; 3 `type:local` + 1 `type:remote`)
 - `next-devtools` — `npx -y next-devtools-mcp@latest` — error/route/build/cache dev server

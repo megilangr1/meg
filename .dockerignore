@@ -1,0 +1,27 @@
+# deps + build output (generated inside the image)
+node_modules
+.next
+out
+coverage
+src/generated
+
+# local env / secrets (NEXT_PUBLIC_* comes in as a build arg)
+.env
+.env.*
+!.env.example
+
+# docker/CI/doc files never belong in the build context
+Dockerfile*
+docker-compose*.yml
+docker/
+.git
+.gitignore
+.github
+*.md
+AGENTS.md
+CLAUDE.md
+.agents/
+.vscode/
+.idea/
+*.tsbuildinfo
+npm-debug.log*
