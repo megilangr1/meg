@@ -8,7 +8,8 @@ import prisma from "@/lib/prisma";
 
 import { ProjectGallery, type GalleryMedia } from "../../_components/project-gallery";
 
-export const revalidate = 60;
+// butuh DB saat request; jangan prerender di build (DB tidak tersedia di builder).
+export const dynamic = "force-dynamic";
 
 async function getProject(slug: string) {
   return prisma.project.findFirst({

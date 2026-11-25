@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-// WorkSection membaca DB, jadi halaman ini ISR (bukan statis murni).
-export const revalidate = 60;
+// WorkSection membaca DB, jadi halaman ini dirender saat request (build tidak punya DB).
+export const dynamic = "force-dynamic";
 
 const personJsonLd = {
   "@context": "https://schema.org",

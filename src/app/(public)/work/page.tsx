@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/work" },
 };
 
-export const revalidate = 60;
+// butuh DB saat request; jangan prerender di build (DB tidak tersedia di builder).
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
   const projects = await prisma.project.findMany({

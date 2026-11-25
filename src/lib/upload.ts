@@ -2,7 +2,9 @@ import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-export const UPLOAD_DIR = path.resolve(process.env.UPLOAD_DIR ?? "./uploads");
+// turbopackIgnore: UPLOAD_DIR = bind mount runtime, bukan bagian output standalone;
+// tanpa opt-out ini tracing menyeret seluruh project ke server bundle (dan build gagal).
+export const UPLOAD_DIR = path.resolve(/*turbopackIgnore: true*/ process.env.UPLOAD_DIR ?? "./uploads");
 export const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
 // Satu sumber untuk simpan + serve: mime menentukan ekstensi dan kind.
@@ -43,7 +45,7 @@ export async function saveUpload(file: File): Promise<SavedUpload> {
 
   const name = `${randomUUID()}.${type.ext}`;
   await mkdir(UPLOAD_DIR, { recursive: true });
-  await writeFile(path.join(UPLOAD_DIR, name), Buffer.from(await file.arrayBuffer()));
+  await writeFile(path.join(/*turbopackIgnore: true*/ UPLOAD_DIR, name), Buffer.from(await file.arrayBuffer()));
 
   return {
     kind: type.kind,
@@ -59,7 +61,7 @@ export function resolveMediaPath(segments: string[]) {
   if (segments.length !== 1) return null;
   const [name] = segments;
   if (!/^[A-Za-z0-9-]+\.[A-Za-z0-9]+$/.test(name)) return null;
-  const file = path.join(UPLOAD_DIR, name);
+  const file = path.join(/*turbopackIgnore: true*/ UPLOAD_DIR, name);
   if (!file.startsWith(UPLOAD_DIR + path.sep) || !mimeForFile(file)) return null;
   return file;
 }

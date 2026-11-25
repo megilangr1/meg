@@ -3,7 +3,8 @@ import type { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
 import { siteConfig } from "@/lib/site";
 
-export const revalidate = 3600;
+// sitemap butuh DB; saat build DB tidak ada, jadi render on-demand (bukan prerender).
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projects = await prisma.project.findMany({
