@@ -28,7 +28,7 @@ services:
     ports:
       - "127.0.0.1:3001:3001"
     environment:
-      DATABASE_URL: "mysql://${DB_USER}:***@172.17.0.1:3306/${DB_NAME}"
+      DATABASE_URL: "mysql://${DB_USER}:${DB_PASSWORD}@172.17.0.1:3306/${DB_NAME}"
       BETTER_AUTH_URL: "https://meggi.chiro-it.site"
       BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET}"
       UPLOAD_DIR: "/app/uploads"
