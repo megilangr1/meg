@@ -1,125 +1,153 @@
 {
-  "version": 1,
+  "version": 2,
   "skills": {
     "better-auth-best-practices": {
       "source": "better-auth/skills",
       "sourceType": "github",
       "skillPath": "better-auth/best-practices/SKILL.md",
-      "computedHash": "f35281e7a0c07b3fd3c4e96c7833dafb294a3a8662cb68a8544f4225008d6568"
+      "computedHash": ""
     },
     "better-auth-security-best-practices": {
       "source": "better-auth/skills",
       "sourceType": "github",
       "skillPath": "security/SKILL.md",
-      "computedHash": "087c1094fa5f1834af4785c058dcc8c9abe4c1321b853883c76ea46c93a21cfe"
+      "computedHash": ""
     },
     "create-auth": {
       "source": "better-auth/skills",
       "sourceType": "github",
       "skillPath": "better-auth/create-auth/SKILL.md",
-      "computedHash": "d101953fda9452eb4e59d4eb50aa829c1961cdd7d0587d26a2b1871abe885e07"
+      "computedHash": ""
+    },
+    "design-taste-frontend": {
+      "source": "leonxlnx/taste-skill",
+      "commit": "d1a2bb41d927083ac7118f60cfc9cdf711810ea0",
+      "sourceType": "github",
+      "skillPath": "skills/taste-skill/SKILL.md",
+      "computedHash": "b10eab0a9684cd09cf34c31ef04a3bf530a5f4404422f9c520d42372d670c7fc"
     },
     "email-and-password-best-practices": {
       "source": "better-auth/skills",
       "sourceType": "github",
       "skillPath": "better-auth/emailAndPassword/SKILL.md",
-      "computedHash": "ac9f9b0a549390f157ec62f5421a0bc90ac622c7e425af13155953847e0b68ea"
+      "computedHash": ""
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "commit": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "83485963700bcf11d5bf78118facb301676b69d918fee2e45a95e7f1a2840f6c"
     },
     "migrate-radix-to-base": {
       "source": "shadcn/ui",
       "sourceType": "github",
       "skillPath": "skills/migrate-radix-to-base/SKILL.md",
-      "computedHash": "4fdc31bf287f674ba6bf91a648120f7b34cd7ef370f998f2cc116fed067789c5"
+      "computedHash": ""
     },
     "next-cache-components-adoption": {
       "source": "vercel/next.js",
       "sourceType": "github",
       "skillPath": "skills/next-cache-components-adoption/SKILL.md",
-      "computedHash": "e8048c51a37d8973349477c9bb0a32d9f5f796a70ebaa10c89b59ac8015b9c55"
+      "computedHash": "d4e61ba4c1a2c2ae750fc2b2db43104b159dd071a959135f156c92d6d5c67b44"
     },
     "next-cache-components-optimizer": {
       "source": "vercel/next.js",
       "sourceType": "github",
       "skillPath": "skills/next-cache-components-optimizer/SKILL.md",
-      "computedHash": "c62f6c13119c4e9027268edaa07291c33d74a676e1bd93583349c07efd990f6b"
+      "computedHash": "05c0f6a2cf533ac4fb91212f6c94076e84ada0afa058ceac8ca57d1b6419cb8e"
     },
     "next-dev-loop": {
       "source": "vercel/next.js",
       "sourceType": "github",
       "skillPath": "skills/next-dev-loop/SKILL.md",
-      "computedHash": "9a2cd6e78f118086f3b2dc69ba98bb34b3fb873a8bcf622eea86a0fe8e540009"
+      "computedHash": "2d8ecd0105c8a23094c42e2ec7be6f0b71c0501a1326b44c26376469b040d1c3"
     },
     "next-partial-prefetching-adoption": {
       "source": "vercel/next.js",
       "sourceType": "github",
       "skillPath": "skills/next-partial-prefetching-adoption/SKILL.md",
-      "computedHash": "1ca75b686e91327da75bc3c286ba037a1f7e6a8d613ce77682c634520e019791"
+      "computedHash": "abcfcdb5ca9bc29c87775b64792f0dbc70c3849bb6b098230723c3a926f2312f"
     },
     "next-partial-prefetching-optimizer": {
       "source": "vercel/next.js",
       "sourceType": "github",
       "skillPath": "skills/next-partial-prefetching-optimizer/SKILL.md",
-      "computedHash": "069e292450e8340c70594362f3a0e9f5212a54a85424d4f334c90b1114d9b3d0"
+      "computedHash": "2886f87fb409c76c9ba6a644863062d801f8f6c7d6c20949ccd6348e87648bab"
     },
     "prisma-cli": {
       "source": "prisma/skills",
       "sourceType": "github",
       "skillPath": "prisma-cli/SKILL.md",
-      "computedHash": "b92e55aef78f6796d81433c44738a6733211a04c16e65cbad6d42c5f71092aab"
+      "computedHash": ""
     },
     "prisma-client-api": {
       "source": "prisma/skills",
       "sourceType": "github",
       "skillPath": "prisma-client-api/SKILL.md",
-      "computedHash": "5dcc0793337151efa73a444e5adbc7e1c24180778e83b4fe94c9109c391bd333"
+      "computedHash": ""
     },
     "prisma-compute": {
       "source": "prisma/skills",
       "sourceType": "github",
       "skillPath": "prisma-compute/SKILL.md",
-      "computedHash": "e5695a3c6f35428e96df30ae662716bd4c9d9074f72cc9334b3050445a1bd4e2"
+      "computedHash": ""
     },
     "prisma-database-setup": {
       "source": "prisma/skills",
       "sourceType": "github",
       "skillPath": "prisma-database-setup/SKILL.md",
-      "computedHash": "0911d9454bd48df3badd23a50fd90a280eabb15dcbd472c14e7b729075dadefb"
+      "computedHash": ""
     },
     "prisma-driver-adapter-implementation": {
       "source": "prisma/skills",
       "sourceType": "github",
       "skillPath": "prisma-driver-adapter-implementation/SKILL.md",
-      "computedHash": "07484627aea6cce4d0f94b4090ff9acc0caa7e104f9988b95abecf80132f4103"
+      "computedHash": ""
     },
     "prisma-mongodb-upgrade": {
       "source": "prisma/skills",
       "sourceType": "github",
       "skillPath": "prisma-mongodb-upgrade/SKILL.md",
-      "computedHash": "f9ba440e88ca4cec9801d04762296e29e99ca08cb8a8156e4f783ecf90279c8f"
+      "computedHash": ""
     },
     "prisma-postgres": {
       "source": "prisma/skills",
       "sourceType": "github",
       "skillPath": "prisma-postgres/SKILL.md",
-      "computedHash": "d669fbd0d8017d16c967f18b20e1c1345cd4a2a0076d762459bfef79f551f655"
+      "computedHash": ""
     },
     "prisma-postgres-setup": {
       "source": "prisma/skills",
       "sourceType": "github",
       "skillPath": "prisma-postgres-setup/SKILL.md",
-      "computedHash": "c89d3aa91285d8e4964fcaa5238c99a3d3c20b617e032e731cf632330a85a5a6"
+      "computedHash": ""
     },
     "prisma-upgrade-v7": {
       "source": "prisma/skills",
       "sourceType": "github",
       "skillPath": "prisma-upgrade-v7/SKILL.md",
-      "computedHash": "dcc6c71adca6b22f37c5bda5ac7fd63c3bb59495596a22e06a29c7c85371558f"
+      "computedHash": ""
     },
     "shadcn": {
       "source": "shadcn/ui",
       "sourceType": "github",
       "skillPath": "skills/shadcn/SKILL.md",
-      "computedHash": "d04e43ec01e921558b93bb8046c14a42a22556689a2827243df900825a4e1604"
+      "computedHash": ""
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "commit": "5a37a6329fbad3666c3207392a6a7c0110e92efb",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "7991ed4fbecdac23f47c1a40c243e00a212a9e7f3604db93959b3ae11dffe299"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "commit": "5a37a6329fbad3666c3207392a6a7c0110e92efb",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "5994e4cfd86144903d2ba750f862b9e36af15e3297aac983679e347b99f6cb71"
     }
   }
 }
