@@ -93,6 +93,7 @@ model Project {
   role        String?   @db.Text
   year        Int?
   techStack   String?   @db.Text
+  liveUrl     String?   @db.Text
   bannerPath  String?   @db.Text
   bannerAlt   String?   @db.Text
   publishedAt DateTime?

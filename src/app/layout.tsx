@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Outfit } from "next/font/google";
+import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/site";
@@ -7,10 +7,13 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-sans" });
+const editorial = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-editorial",
+});
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -29,11 +32,20 @@ export const metadata: Metadata = {
   applicationName: siteConfig.name,
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
-  keywords: ["MeGGi dev", "Next.js", "React", "portfolio", "web developer"],
+  keywords: [
+    "MeGGi dev",
+    "fullstack web developer",
+    "Laravel developer",
+    "PHP",
+    "MySQL",
+    "REST API",
+    "React",
+    "Next.js",
+    "Linux",
+  ],
   openGraph: {
     title: siteConfig.title,
-    description:
-      "Full-stack Next.js developer. Clean UI, solid architecture, no bloat.",
+    description: siteConfig.description,
     url: "/",
     siteName: siteConfig.name,
     locale: siteConfig.locale,
@@ -42,8 +54,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: siteConfig.title,
-    description:
-      "Full-stack Next.js developer. Clean UI, solid architecture, no bloat.",
+    description: siteConfig.description,
   },
   icons: {
     icon: [
@@ -75,23 +86,24 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   colorScheme: "light dark",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f4ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#121110" },
   ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="id"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={cn(
         "h-full",
-        "scroll-pt-20 scroll-smooth antialiased motion-reduce:scroll-auto",
+        "scroll-pt-24 scroll-smooth antialiased motion-reduce:scroll-auto",
         geistSans.variable,
         geistMono.variable,
+        editorial.variable,
         "font-sans",
-        outfit.variable,
       )}
     >
       <body>

@@ -64,7 +64,7 @@ export function ProjectGallery({
     <div className="flex flex-col gap-10">
       {images.length > 0 && (
         <section className="flex flex-col gap-4">
-          <h2 className="font-heading text-xl font-semibold">Galeri</h2>
+          <h2 className="font-display font-medium text-2xl">Galeri</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {images.map((image, index) => (
               <button
@@ -72,7 +72,7 @@ export function ProjectGallery({
                 type="button"
                 onClick={() => setOpenIndex(index)}
                 aria-label="Buka gambar di lightbox"
-                className="group relative aspect-4/3 cursor-zoom-in overflow-hidden rounded-xl border bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                className="group relative aspect-4/3 cursor-zoom-in overflow-hidden border border-border bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 <Image
                   src={`/media/${image.path}`}
@@ -94,7 +94,7 @@ export function ProjectGallery({
 
       {videos.length > 0 && (
         <section className="flex flex-col gap-4">
-          <h2 className="font-heading text-xl font-semibold">Video</h2>
+          <h2 className="font-display font-medium text-2xl">Video</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {videos.map((video, index) => (
               <button
@@ -102,7 +102,7 @@ export function ProjectGallery({
                 type="button"
                 onClick={() => setOpenIndex(images.length + index)}
                 aria-label="Putar video"
-                className="group relative aspect-video cursor-pointer overflow-hidden rounded-xl border bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                className="group relative aspect-video cursor-pointer overflow-hidden border border-border bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 <video
                   src={`/media/${video.path}`}
@@ -121,7 +121,7 @@ export function ProjectGallery({
 
       {documents.length > 0 && (
         <section className="flex flex-col gap-4">
-          <h2 className="font-heading text-xl font-semibold">Dokumen</h2>
+          <h2 className="font-display font-medium text-2xl">Dokumen</h2>
           <ul className="flex flex-col gap-2">
             {documents.map((document) => (
               <li key={document.path}>

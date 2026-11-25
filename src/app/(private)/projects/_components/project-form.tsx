@@ -50,6 +50,7 @@ const EMPTY: ProjectFormValues = {
   role: "",
   year: "",
   techStack: "",
+  liveUrl: "",
   status: "draft",
   sortOrder: "0",
 };
@@ -204,7 +205,10 @@ export function ProjectForm(props: ProjectFormProps) {
                     disabled={isLoading}
                   />
                   <FieldDescription className="flex justify-between gap-2">
-                    <span>Teks biasa — baris kosong jadi paragraf baru.</span>
+                    <span>
+                      Baris kosong jadi paragraf baru. Awali baris dengan{" "}
+                      <code>## </code> untuk judul bagian case study.
+                    </span>
                     <span
                       className={
                         descriptionLength > DESCRIPTION_MAX ? "text-destructive" : undefined
@@ -278,6 +282,30 @@ export function ProjectForm(props: ProjectFormProps) {
                   />
                   {!fieldState.invalid && (
                     <FieldDescription>Pisahkan dengan koma.</FieldDescription>
+                  )}
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="liveUrl"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="sm:col-span-2">
+                  <FieldLabel htmlFor="project-live-url">URL live</FieldLabel>
+                  <Input
+                    {...field}
+                    id="project-live-url"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="https://contoh.go.id"
+                    inputMode="url"
+                    disabled={isLoading}
+                  />
+                  {!fieldState.invalid && (
+                    <FieldDescription>
+                      Opsional. Tampil sebagai tautan di halaman studi kasus.
+                    </FieldDescription>
                   )}
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>

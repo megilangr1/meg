@@ -62,6 +62,7 @@ export default async function Page({
     { label: "Peran", value: project.role ?? "—" },
     { label: "Tahun", value: project.year ? String(project.year) : "—" },
     { label: "Teknologi", value: project.techStack ?? "—" },
+    { label: "URL live", value: project.liveUrl ?? "—" },
     { label: "Urutan", value: String(project.sortOrder) },
   ];
 

@@ -39,6 +39,7 @@ export default async function Page({
     role: project.role ?? "",
     year: project.year ? String(project.year) : "",
     techStack: project.techStack ?? "",
+    liveUrl: project.liveUrl ?? "",
     status: project.publishedAt ? "published" : "draft",
     sortOrder: String(project.sortOrder),
   };

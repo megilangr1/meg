@@ -28,6 +28,14 @@ export const projectFormSchema = z.object({
     .regex(/^\d*$/, "Tahun harus angka.")
     .max(4, "Format 4 digit."),
   techStack: z.string().trim().max(500, "Maksimal 500 karakter."),
+  liveUrl: z
+    .string()
+    .trim()
+    .max(500, "Maksimal 500 karakter.")
+    .refine(
+      (value) => !value || /^https?:\/\/\S+$/.test(value),
+      "URL harus diawali http:// atau https://.",
+    ),
   status: z.enum(["draft", "published"]),
   sortOrder: z.string().trim().regex(/^\d*$/, "Urutan harus angka."),
 });

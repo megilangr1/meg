@@ -2,9 +2,9 @@
 
 <img src="public/brand/logo-clear.png" alt="MeGGi dev" width="220" />
 
-# MeGGi dev — fast web apps
+# MeGGi dev — Fullstack Web Developer
 
-**Full-stack Next.js developer. Clean UI, solid architecture, no bloat.**
+**Laravel, MySQL, REST API, React/Next.js, Linux. Dari database sampai production.**
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.4.6-black?logo=next.js)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19.2.8-61DAFB?logo=react&logoColor=black)](https://react.dev)
@@ -25,7 +25,7 @@ Portfolio site for **MeGGi dev**, built with the Next.js App Router. Three areas
 
 | Route | Area | Status |
 | --- | --- | --- |
-| `/` | Public landing — hero, stack, services, work, about, CTA | Live sections, content still placeholder |
+| `/` | Public landing — hero, selected work, capabilities, experience, about, contact | Live, content from CV + project DB |
 | `/work` | Public project list (`/work/<slug>` detail, gallery + lightbox) | Live, reads published projects from DB |
 | `/login` | Auth — split-screen with banner image | Email/password form + error map |
 | `/dashboard` | Private app — sidebar + header layout | Placeholder page |
@@ -41,7 +41,7 @@ Canonical URL: `siteConfig.url` (`NEXT_PUBLIC_APP_URL`, fallback `https://meggi.
 - **UI primitives:** `@base-ui/react`, `class-variance-authority`, `lucide-react`, `motion`
 - **Dark mode:** `next-themes` (class strategy, default `system`) + `ThemeToggle` (Light/Dark/System)
 - **Magic UI registry** (`@magicui`): `bento-grid`, `blur-fade`, `marquee`, `globe` (+ `cobe`)
-- **Fonts:** Outfit (`--font-sans`) + Geist / Geist Mono
+- **Fonts:** Bricolage Grotesque (`font-display`) + Geist / Geist Mono
 - **Database:** Prisma ORM 7.10.1 + `@prisma/adapter-mariadb`, provider `mysql` (MySQL 8 / MariaDB at `localhost:3306/meg`)
 - **Auth:** Better Auth 1.7.28 (email/password + admin plugin, Prisma adapter)
 - **Brand assets:** `public/brand/logo*.png` (`*-clear.png` = transparent variant), favicons in `public/favicons/`, login banner in `public/image/login-banner.jpg`
@@ -183,6 +183,6 @@ Full internal notes: [`PROJECT.md`](./PROJECT.md)
 
 <div align="center">
 
-Built by **MeGGi dev** — fast web apps, no bloat.
+Built by **MeGGi dev** — fullstack web developer.
 
 </div>

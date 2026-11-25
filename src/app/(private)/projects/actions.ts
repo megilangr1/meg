@@ -30,6 +30,7 @@ function toData(values: ProjectFormValues, publishedAt: Date | null) {
     description: values.description || null,
     role: values.role || null,
     techStack: values.techStack || null,
+    liveUrl: values.liveUrl || null,
     year: values.year ? Number(values.year) : null,
     sortOrder: Number(values.sortOrder || 0),
     publishedAt,

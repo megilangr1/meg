@@ -16,46 +16,74 @@ export default function OpengraphImage() {
           justifyContent: "space-between",
           width: "100%",
           height: "100%",
-          padding: "72px",
-          background: "#09090b",
-          color: "#fafafa",
+          padding: "64px",
+          background: "#121110",
+          color: "#f2eee5",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div
-            style={{
-              width: 16,
-              height: 16,
-              borderRadius: 999,
-              background: "#f97316",
-            }}
-          />
-          <span style={{ fontSize: 28, letterSpacing: -0.5 }}>
-            {siteConfig.name}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderBottom: "1px solid #322e28",
+            paddingBottom: 20,
+          }}
+        >
+          <span style={{ fontSize: 24, letterSpacing: 4 }}>
+            {siteConfig.name.toUpperCase()}
           </span>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <span
             style={{
-              fontSize: 72,
-              fontWeight: 700,
-              letterSpacing: -2,
-              lineHeight: 1.05,
+              fontSize: 20,
+              color: "#a39b8d",
+              fontFamily: "monospace",
+              letterSpacing: 2,
             }}
           >
-            Fast web apps.
-          </span>
-          <span style={{ fontSize: 30, color: "#a1a1aa", maxWidth: 900 }}>
-            Full-stack Next.js developer. Clean UI, solid architecture, no
-            bloat.
+            {siteConfig.location.toUpperCase()}
           </span>
         </div>
 
-        <span style={{ fontSize: 24, color: "#71717a" }}>
-          {siteConfig.url.replace(/^https?:\/\//, "")}
-        </span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <span
+            style={{
+              fontSize: 78,
+              lineHeight: 1,
+              letterSpacing: -2,
+              maxWidth: 980,
+            }}
+          >
+            Sistem web, dari database sampai production.
+          </span>
+          <span
+            style={{
+              fontSize: 26,
+              color: "#a39b8d",
+              fontFamily: "monospace",
+              letterSpacing: 1,
+            }}
+          >
+            Laravel · MySQL · REST API · React/Next.js · Linux
+          </span>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderTop: "1px solid #322e28",
+            paddingTop: 20,
+            color: "#a39b8d",
+            fontFamily: "monospace",
+            fontSize: 20,
+          }}
+        >
+          <span>{siteConfig.url.replace(/^https?:\/\//, "")}</span>
+          <span style={{ color: "#f08a62" }}>→</span>
+        </div>
       </div>
     ),
     { ...size },

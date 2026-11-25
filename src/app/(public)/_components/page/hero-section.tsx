@@ -1,116 +1,99 @@
 import Link from "next/link";
-import { ArrowRight, Mail, MapPin } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarGroup,
-  AvatarImage,
-} from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { BlurFade } from "@/components/ui/blur-fade";
-import { Button } from "@/components/ui/button";
-import { DotPattern } from "@/components/ui/dot-pattern";
-import { Globe } from "@/components/ui/globe";
-import { NumberTicker } from "@/components/ui/number-ticker";
+import { siteConfig } from "@/lib/site";
 
-const stats = [
-  { label: "Years shipping", value: 3, suffix: "+" },
-  { label: "Projects delivered", value: 20, suffix: "+" },
-  { label: "Avg Lighthouse", value: 98, suffix: "" },
-  { label: "Reply time", value: 24, suffix: "h" },
+const stack = [
+  { label: "Bahasa", value: "PHP, TypeScript, JavaScript" },
+  { label: "Backend", value: "Laravel, REST API" },
+  { label: "Data", value: "MySQL, MariaDB" },
+  { label: "Frontend", value: "React, Next.js, Livewire" },
+  { label: "Runtime", value: "Linux, deployment" },
 ];
 
 export function HeroSection() {
   return (
-    <section className="flex flex-col gap-16">
-      <div className="relative grid items-center gap-10 lg:grid-cols-2">
-        <DotPattern
-          width={20}
-          height={20}
-          className="text-brand/40 [mask-image:radial-gradient(360px_at_20%_0%,white,transparent)]"
-        />
-        <BlurFade delay={0}>
-          <div className="flex flex-col gap-6">
-            <Badge variant="secondary" className="w-fit">
-              <span className="size-1.5 animate-pulse rounded-full bg-brand" />
-              Available for projects
-            </Badge>
-            <h1 className="font-heading text-4xl leading-tight font-semibold tracking-tight md:text-6xl">
-              MeGGi dev builds <span className="text-brand">fast</span> web
-              apps.
-            </h1>
-            <p className="max-w-xl text-base text-muted-foreground md:text-lg">
-              Full-stack Next.js developer. Clean UI, solid architecture, no
-              bloat. Portfolio, SaaS, company profiles.
+    <section className="border-b border-border">
+      <div className="mx-auto grid min-h-[calc(100svh-4rem)] w-full max-w-6xl items-center gap-16 px-6 py-20 lg:grid-cols-[1.35fr_0.65fr] lg:gap-24 lg:py-24">
+        <div className="editorial-enter">
+          <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+            Fullstack web developer — {siteConfig.location}
+          </p>
+          <h1 className="mt-7 max-w-3xl font-display font-medium text-[clamp(2.75rem,5vw,5rem)] leading-[0.98] tracking-[-0.035em] text-balance">
+            Sistem web yang rapi, dari <span className="text-brand">database</span>{" "}
+            sampai production.
+          </h1>
+          <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Saya membangun aplikasi end-to-end dengan Laravel, MySQL, dan
+            React/Next.js. Fokus pada alur data, arsitektur aplikasi, dan sistem
+            yang tetap mudah dirawat setelah rilis.
+          </p>
+
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="#work"
+              className="group inline-flex h-11 items-center justify-between gap-8 bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-brand hover:text-brand-foreground"
+            >
+              Lihat studi kasus
+              <ArrowDownRight className="size-4 transition-transform group-hover:translate-x-1 group-hover:translate-y-1" />
+            </Link>
+            <Link
+              href="#contact"
+              className="group inline-flex h-11 items-center justify-between gap-8 border border-border px-5 text-sm font-medium transition-colors hover:border-foreground"
+            >
+              Diskusikan proyek
+              <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+
+          <div className="mt-14 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-6 font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
+            <span>PHP / Laravel</span>
+            <span>MySQL / MariaDB</span>
+            <span>REST API</span>
+            <span>Linux / Deployment</span>
+          </div>
+        </div>
+
+        <aside className="editorial-enter editorial-enter-delay-2 lg:border-l lg:border-border lg:pl-10">
+          <p className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase">
+            Profil singkat
+          </p>
+          <div className="mt-5 border-t border-foreground/30 pt-5">
+            <p className="font-display font-medium text-3xl leading-none tracking-[-0.02em]">
+              Fullstack
+              <br />
+              Web Developer
             </p>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                size="lg"
-                render={<Link href="#work" />}
-                nativeButton={false}
-              >
-                View work
-                <ArrowRight data-icon="inline-end" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                render={<Link href="#contact" />}
-                nativeButton={false}
-              >
-                <Mail data-icon="inline-start" />
-                Contact
-              </Button>
-            </div>
-            <div className="flex items-center gap-3">
-              <AvatarGroup>
-                <Avatar size="sm">
-                  <AvatarImage
-                    src="/brand/logo-icon-clear.png"
-                    alt="MeGGi dev"
-                    className="dark:invert"
-                  />
-                  <AvatarFallback>MD</AvatarFallback>
-                </Avatar>
-                <Avatar size="sm">
-                  <AvatarFallback>NX</AvatarFallback>
-                </Avatar>
-                <Avatar size="sm">
-                  <AvatarFallback>TS</AvatarFallback>
-                </Avatar>
-              </AvatarGroup>
-              <p className="text-sm text-muted-foreground">
-                Next.js 16, React 19, shadcn/ui, Magic UI
-              </p>
-            </div>
+            <p className="mt-3 text-sm text-muted-foreground">
+              PT Nosa Jaya Karya · 2026—sekarang
+            </p>
           </div>
-        </BlurFade>
-        <BlurFade delay={0.1}>
-          <div className="relative h-80 w-full overflow-hidden rounded-xl border bg-muted/30 lg:h-105">
-            <Globe />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center p-4">
-              <Badge>
-                <MapPin data-icon="inline-start" />
-                Remote-first, worldwide
-              </Badge>
-            </div>
-          </div>
-        </BlurFade>
+
+          <dl className="mt-10 divide-y divide-border border-y border-border">
+            {stack.map((item) => (
+              <div
+                key={item.label}
+                className="grid grid-cols-[4.5rem_1fr] gap-4 py-3"
+              >
+                <dt className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
+                  {item.label}
+                </dt>
+                <dd className="text-sm leading-snug">{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <Link
+            href={`mailto:${siteConfig.email}`}
+            className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.08em] uppercase"
+          >
+            <span className="border-b border-foreground pb-0.5 transition-colors group-hover:border-brand group-hover:text-brand">
+              {siteConfig.email}
+            </span>
+            <ArrowUpRight className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
+        </aside>
       </div>
-      <BlurFade delay={0.15} inView>
-        <dl className="grid grid-cols-2 gap-6 border-t md:grid-cols-4 md:gap-4 pt-6">
-          {stats.map((s) => (
-            <div key={s.label} className="flex flex-col gap-1">
-              <dd className="font-heading text-3xl font-semibold tabular-nums">
-                <NumberTicker value={s.value} />
-                {s.suffix}
-              </dd>
-              <dt className="text-xs text-muted-foreground">{s.label}</dt>
-            </div>
-          ))}
-        </dl>
-      </BlurFade>
     </section>
   );
 }

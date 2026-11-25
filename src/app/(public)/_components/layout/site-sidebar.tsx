@@ -1,5 +1,9 @@
 "use client";
 
+import { Menu } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,9 +13,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
+import { siteConfig } from "@/lib/site";
 
 export default function SiteSidebar({
   nav,
@@ -25,49 +27,50 @@ export default function SiteSidebar({
       <Button
         variant="ghost"
         size="icon"
-        className="md:hidden"
-        aria-label="Open menu"
+        className="size-11 md:hidden"
+        aria-label="Buka menu"
         onClick={() => setOpen(true)}
       >
         <Menu />
-        <span className="sr-only">Open menu</span>
       </Button>
 
-      <Sheet open={open} onOpenChange={(value) => setOpen(value)}>
+      <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="right" className="gap-0">
           <SheetHeader className="border-b">
-            <SheetTitle>MeGGi dev</SheetTitle>
+            <SheetTitle className="font-mono text-xs tracking-[0.16em] uppercase">
+              {siteConfig.name}
+            </SheetTitle>
             <SheetDescription>
-              Navigate sections and get in touch.
+              Work, about, dan kontak.
             </SheetDescription>
           </SheetHeader>
-          <nav aria-label="Mobile" className="flex flex-col gap-1 py-2">
-            {nav.map((n) => (
+          <nav aria-label="Mobile" className="flex flex-col py-2">
+            {nav.map((item, index) => (
               <Link
-                key={n.href}
-                href={n.href}
-                className={"rounded-lg px-4 py-2 text-sm hover:bg-muted"}
+                key={item.href}
+                href={item.href}
+                className="flex items-baseline justify-between border-b px-4 py-4 text-lg transition-colors hover:bg-muted"
                 onClick={() => setOpen(false)}
               >
-                {n.label}
+                <span>{item.label}</span>
+                <span className="font-mono text-[10px] text-muted-foreground">
+                  0{index + 1}
+                </span>
               </Link>
             ))}
           </nav>
           <SheetFooter>
             <Button
-              variant="outline"
-              className="w-full"
-              render={<Link href="/login" onClick={() => setOpen(false)} />}
+              className="h-11 w-full"
+              render={
+                <Link
+                  href={`mailto:${siteConfig.email}`}
+                  onClick={() => setOpen(false)}
+                />
+              }
               nativeButton={false}
             >
-              Login
-            </Button>
-            <Button
-              className="w-full"
-              render={<Link href="#contact" onClick={() => setOpen(false)} />}
-              nativeButton={false}
-            >
-              Hire me
+              Email saya
             </Button>
           </SheetFooter>
         </SheetContent>

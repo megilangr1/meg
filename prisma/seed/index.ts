@@ -1,4 +1,5 @@
 import { seedUser } from "./auth.seed";
+import { seedProject } from "./project.seed";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "@/generated/prisma/client";
 
@@ -16,6 +17,7 @@ const prisma = new PrismaClient({
 
 export async function main() {
   await seedUser(prisma);
+  await seedProject(prisma);
 }
 
 main()

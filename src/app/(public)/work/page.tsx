@@ -1,30 +1,13 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, FolderKanban } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import prisma from "@/lib/prisma";
-import { FolderKanban } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Work",
-  description: "Kumpulan project yang pernah saya garap.",
+  description:
+    "Studi kasus aplikasi web: Laravel, MySQL, REST API, React, dan Next.js.",
   alternates: { canonical: "/work" },
 };
 
@@ -42,100 +25,96 @@ export default async function Page() {
       role: true,
       year: true,
       techStack: true,
-      bannerPath: true,
-      bannerAlt: true,
     },
   });
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pt-16 pb-24">
-      <header className="flex max-w-2xl flex-col gap-3">
-        <Badge variant="outline" className="w-fit">
-          Work
-        </Badge>
-        <h1 className="font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-          Project yang sudah dikerjakan
-        </h1>
-        <p className="text-muted-foreground">
-          {projects.length > 0
-            ? `${projects.length} project terbit — klik untuk melihat detail, galeri, dan dokumennya.`
-            : "Belum ada project yang diterbitkan."}
+    <main
+      id="main"
+      className="mx-auto w-full max-w-6xl px-6 pt-16 pb-24 lg:pt-20"
+    >
+      <Link
+        href="/"
+        className="group inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.14em] text-muted-foreground uppercase transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-1" />
+        Kembali
+      </Link>
+
+      <header className="mt-12 grid gap-8 border-b border-border pb-12 lg:grid-cols-[1fr_1fr] lg:items-end">
+        <div>
+          <p className="font-mono text-[10px] tracking-[0.18em] text-brand uppercase">
+            Work index
+          </p>
+          <h1 className="mt-5 font-display font-medium text-5xl leading-[0.96] tracking-[-0.03em] sm:text-6xl lg:text-7xl">
+            Studi kasus.
+          </h1>
+        </div>
+        <p className="max-w-md text-sm leading-relaxed text-muted-foreground lg:justify-self-end">
+          Aplikasi pemerintahan, sistem internal, dan e-commerce. Ditulis dari
+          konteks sampai keputusan teknis — tanpa angka yang tidak bisa
+          dipertanggungjawabkan.
         </p>
       </header>
 
       {projects.length === 0 ? (
-        <Empty className="border py-16">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <FolderKanban />
-            </EmptyMedia>
-            <EmptyTitle>Belum ada project</EmptyTitle>
-            <EmptyDescription>
-              Project muncul di sini setelah diterbitkan dari dashboard.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
+        <div className="mt-16 flex flex-col items-center border border-dashed border-border px-6 py-20 text-center">
+          <FolderKanban className="size-6 text-muted-foreground" />
+          <p className="mt-4 font-display font-medium text-2xl">Belum ada project terbit.</p>
+          <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+            Project akan muncul di sini setelah diterbitkan dari dashboard.
+          </p>
+        </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2">
-          {projects.map((project) => (
-            <Card key={project.id} className="gap-0 overflow-hidden pt-0">
+        <div className="border-b border-border">
+          {projects.map((project, index) => {
+            const tech = project.techStack
+              ?.split(",")
+              .map((item) => item.trim())
+              .filter(Boolean);
+
+            return (
               <Link
+                key={project.id}
                 href={`/work/${project.slug}`}
-                className="relative block aspect-video border-b bg-muted/40"
-                aria-label={`Buka ${project.title}`}
+                className="group grid gap-5 border-t border-border py-8 transition-colors hover:bg-card/70 sm:grid-cols-[3rem_1fr_10rem] sm:gap-6 sm:px-3"
               >
-                {project.bannerPath ? (
-                  <Image
-                    src={`/media/${project.bannerPath}`}
-                    alt={project.bannerAlt ?? project.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="absolute inset-0 bg-linear-to-br from-brand/20 via-transparent to-transparent" />
-                )}
-              </Link>
+                <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
 
-              <CardHeader>
-                <CardTitle>
-                  <Link href={`/work/${project.slug}`} className="hover:underline">
-                    {project.title}
-                  </Link>
-                </CardTitle>
-                <CardDescription className="line-clamp-3">
-                  {project.summary}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="flex flex-col gap-4">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {project.role && <Badge variant="secondary">{project.role}</Badge>}
-                  {project.year && <Badge variant="outline">{project.year}</Badge>}
-                  {project.techStack
-                    ?.split(",")
-                    .map((tech) => tech.trim())
-                    .filter(Boolean)
-                    .map((tech) => (
-                      <Badge key={tech} variant="outline">
-                        {tech}
-                      </Badge>
-                    ))}
+                <div>
+                  <div className="flex items-start justify-between gap-6">
+                    <h2 className="max-w-2xl font-display font-medium text-3xl leading-tight tracking-[-0.01em] transition-colors group-hover:text-brand sm:text-4xl">
+                      {project.title}
+                    </h2>
+                    <ArrowUpRight className="mt-1 hidden size-5 shrink-0 text-muted-foreground transition-all group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-brand sm:block" />
+                  </div>
+                  <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                    {project.summary}
+                  </p>
+                  {tech && tech.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] tracking-[0.06em] text-muted-foreground uppercase">
+                      {tech.map((item) => (
+                        <span key={item}>{item}</span>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-fit"
-                  render={<Link href={`/work/${project.slug}`} />}
-                  nativeButton={false}
-                >
-                  Lihat detail
-                  <ArrowRight data-icon="inline-end" />
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                <div className="flex items-baseline justify-between gap-4 sm:flex-col sm:items-end sm:gap-2">
+                  <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+                    {project.year ?? "—"}
+                  </span>
+                  {project.role && (
+                    <span className="text-right font-mono text-[10px] tracking-[0.06em] text-muted-foreground uppercase">
+                      {project.role}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </main>
