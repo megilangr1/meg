@@ -12,7 +12,8 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAuthPage = pathname === "/login";
-  const protectedPaths = ["/dashboard", "/akun-pengguna"];
+  const protectedPaths = ["/dashboard", "/akun-pengguna", "/projects"];
+  const adminPaths = ["/akun-pengguna", "/projects"];
 
   const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
 
@@ -26,7 +27,7 @@ export async function proxy(request: NextRequest) {
     if (!sesCheck) return NextResponse.redirect(new URL("/login", request.url));
 
     if (
-      pathname.startsWith("/akun-pengguna") &&
+      adminPaths.some((path) => pathname.startsWith(path)) &&
       (sesCheck.user as { role?: string }).role !== "admin"
     )
       return NextResponse.redirect(new URL("/dashboard", request.url));

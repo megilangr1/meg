@@ -4,6 +4,7 @@ node_modules
 out
 coverage
 src/generated
+uploads
 
 # local env / secrets (NEXT_PUBLIC_* comes in as a build arg)
 .env

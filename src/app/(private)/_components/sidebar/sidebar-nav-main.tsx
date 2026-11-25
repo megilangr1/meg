@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  FolderKanban,
   LayoutDashboardIcon,
   RotateCcw,
   TriangleAlert,
@@ -29,6 +30,7 @@ const mainItems: NavItem[] = [
 ];
 
 const adminItems: NavItem[] = [
+  { title: "Projects", url: "/projects", Icon: FolderKanban },
   { title: "Akun Pengguna", url: "/akun-pengguna", Icon: Users },
 ];
 

@@ -42,7 +42,7 @@ model Session {
   impersonatedBy String? @db.Text
 
   @@unique([token])
-  @@index([userId(length: 191)])
+  @@index([userId])
   @@map("session")
 }
 
@@ -62,7 +62,7 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
-  @@index([userId(length: 191)])
+  @@index([userId])
   @@map("account")
 }
 
@@ -77,3 +77,48 @@ model Verification {
   @@index([identifier(length: 191)])
   @@map("verification")
 }
+
+enum AssetKind {
+  image
+  video
+  document
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String    @db.Text
+  summary     String    @db.Text
+  description String?   @db.Text
+  role        String?   @db.Text
+  year        Int?
+  techStack   String?   @db.Text
+  bannerPath  String?   @db.Text
+  bannerAlt   String?   @db.Text
+  publishedAt DateTime?
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  assets      ProjectAsset[]
+
+  @@index([publishedAt, sortOrder])
+  @@map("project")
+}
+
+model ProjectAsset {
+  id           String    @id @default(cuid())
+  projectId    String
+  project      Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  kind         AssetKind
+  path         String    @db.Text
+  originalName String?   @db.Text
+  mime         String    @db.Text
+  size         Int
+  caption      String?   @db.Text
+  sortOrder    Int       @default(0)
+  createdAt    DateTime  @default(now())
+
+  @@index([projectId, kind, sortOrder])
+  @@map("project_asset")
+}
+

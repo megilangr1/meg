@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +13,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { doAlert } from "@/helpers/client/client.helper";
 import { authClient } from "@/lib/auth-client";
 import {
@@ -43,6 +43,7 @@ export function UserForm(props: UserFormProps) {
 
   const form = useForm<CreateUserForm | UpdateUserForm>({
     resolver: zodResolver(isCreate ? createUserSchema : updateUserSchema),
+    mode: "onTouched",
     defaultValues:
       props.mode === "edit"
         ? { name: props.defaultValues.name, email: props.defaultValues.email, password: "" }
@@ -119,7 +120,6 @@ export function UserForm(props: UserFormProps) {
                 aria-invalid={fieldState.invalid}
                 placeholder="cth: Budi Santoso"
                 autoComplete="name"
-                required
                 disabled={isLoading}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -141,7 +141,6 @@ export function UserForm(props: UserFormProps) {
                   aria-invalid={fieldState.invalid}
                   placeholder="pengguna@mail.com"
                   autoComplete="email"
-                  required
                   disabled={isLoading}
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -164,7 +163,6 @@ export function UserForm(props: UserFormProps) {
                   aria-invalid={fieldState.invalid}
                   placeholder="Minimal 8 karakter"
                   autoComplete="new-password"
-                  required={isCreate}
                   disabled={isLoading}
                 />
                 {!fieldState.invalid && !isCreate && (
@@ -193,7 +191,7 @@ export function UserForm(props: UserFormProps) {
           form={isCreate ? "user-create-form" : "user-edit-form"}
           disabled={isLoading}
         >
-          {isLoading && <Loader2 className="animate-spin" />}
+          {isLoading && <Spinner data-icon="inline-start" />}
           {isCreate ? "Tambah Pengguna" : "Simpan Perubahan"}
         </Button>
       </Field>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
@@ -5,54 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import prisma from "@/lib/prisma";
 
-const projects = [
-  {
-    index: "01",
-    title: "SaaS analytics dashboard",
-    role: "Full-stack build",
-    year: "2026",
-    description:
-      "Multi-tenant analytics: auth, roles, realtime charts, billing-ready structure. One codebase, tight data flow.",
-    tags: ["Next.js", "Postgres", "Realtime"],
-    metrics: [
-      { value: "98", label: "Lighthouse" },
-      { value: "0.8s", label: "LCP" },
-      { value: "12", label: "Tenants live" },
-    ],
-    visual: "dashboard" as const,
-  },
-  {
-    index: "02",
-    title: "Company profile site",
-    role: "Design + build",
-    year: "2025",
-    description:
-      "Marketing site with CMS content, i18n routing, instant navigation. Editors ship pages, devs stay out of the way.",
-    tags: ["Magic UI", "Motion", "CMS"],
-    metrics: [
-      { value: "100", label: "Lighthouse" },
-      { value: "0.5s", label: "LCP" },
-      { value: "3", label: "Locales" },
-    ],
-    visual: "site" as const,
-  },
-  {
-    index: "03",
-    title: "Token-based design system",
-    role: "System + docs",
-    year: "2025",
-    description:
-      "Component kit on semantic tokens: light/dark, one import path, docs with live examples. Registry-ready.",
-    tags: ["Base UI", "Tailwind", "Docs"],
-    metrics: [
-      { value: "40+", label: "Components" },
-      { value: "2", label: "Themes" },
-      { value: "1", label: "Import path" },
-    ],
-    visual: "system" as const,
-  },
-];
+const VISUALS = ["dashboard", "site", "system"] as const;
 
 function ProjectVisual({ kind }: { kind: "dashboard" | "site" | "system" }) {
   if (kind === "dashboard") {
@@ -156,7 +112,26 @@ function ProjectVisual({ kind }: { kind: "dashboard" | "site" | "system" }) {
   );
 }
 
-export function WorkSection() {
+export async function WorkSection() {
+  const projects = await prisma.project.findMany({
+    where: { publishedAt: { not: null } },
+    orderBy: [{ sortOrder: "asc" }, { publishedAt: "desc" }],
+    take: 3,
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      summary: true,
+      role: true,
+      year: true,
+      techStack: true,
+      bannerPath: true,
+      bannerAlt: true,
+    },
+  });
+
+  if (projects.length === 0) return null;
+
   return (
     <section id="work" className="flex scroll-mt-24 flex-col gap-12">
       <BlurFade delay={0} inView>
@@ -169,69 +144,80 @@ export function WorkSection() {
               Recent projects
             </h2>
             <p className="text-muted-foreground">
-              Three builds, three shapes. Each row: what it is, what it shipped,
-              what it measured.
+              {projects.length} project terakhir yang sudah terbit — lengkap dengan
+              galeri dan dokumennya.
             </p>
           </div>
-          <Button
-            variant="ghost"
-            render={<Link href="#contact" />}
-            nativeButton={false}
-          >
-            Request full list
+          <Button variant="ghost" render={<Link href="/work" />} nativeButton={false}>
+            See all work
             <ArrowUpRight data-icon="inline-end" />
           </Button>
         </div>
       </BlurFade>
 
       <div className="flex flex-col gap-12">
-        {projects.map((p, i) => (
-          <BlurFade key={p.title} delay={i * 0.05} inView>
+        {projects.map((project, i) => (
+          <BlurFade key={project.id} delay={i * 0.05} inView>
             <article className="grid items-center gap-8 lg:grid-cols-2">
               <div className={i % 2 === 1 ? "lg:order-2" : undefined}>
-                <div className="relative aspect-4/3 overflow-hidden rounded-xl border bg-muted/40">
-                  <div className="absolute inset-0 bg-linear-to-br from-brand/10 via-transparent to-transparent" />
-                  <div className="relative h-full">
-                    <ProjectVisual kind={p.visual} />
-                  </div>
-                  <div className="absolute top-4 left-4">
-                    <Badge variant="secondary">{p.index}</Badge>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <Badge>{p.year}</Badge>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4">
-                <p className="text-sm text-muted-foreground">{p.role}</p>
-                <h3 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">
-                  {p.title}
-                </h3>
-                <p className="max-w-lg text-muted-foreground">
-                  {p.description}
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {p.tags.map((t) => (
-                    <Badge key={t} variant="outline">
-                      {t}
+                <Link
+                  href={`/work/${project.slug}`}
+                  aria-label={`Buka ${project.title}`}
+                  className="relative block aspect-4/3 overflow-hidden rounded-xl border bg-muted/40"
+                >
+                  {project.bannerPath ? (
+                    <Image
+                      src={`/media/${project.bannerPath}`}
+                      alt={project.bannerAlt ?? project.title}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 bg-linear-to-br from-brand/10 via-transparent to-transparent" />
+                      <div className="relative h-full">
+                        <ProjectVisual kind={VISUALS[i % VISUALS.length]} />
+                      </div>
+                    </>
+                  )}
+                  <span className="absolute top-4 left-4">
+                    <Badge variant="secondary">
+                      {String(i + 1).padStart(2, "0")}
                     </Badge>
-                  ))}
+                  </span>
+                  {project.year && (
+                    <span className="absolute top-4 right-4">
+                      <Badge>{project.year}</Badge>
+                    </span>
+                  )}
+                </Link>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                {project.role && (
+                  <p className="text-sm text-muted-foreground">{project.role}</p>
+                )}
+                <h3 className="font-heading text-2xl font-semibold tracking-tight md:text-3xl">
+                  <Link href={`/work/${project.slug}`} className="hover:underline">
+                    {project.title}
+                  </Link>
+                </h3>
+                <p className="max-w-lg text-muted-foreground">{project.summary}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {project.techStack
+                    ?.split(",")
+                    .map((tech) => tech.trim())
+                    .filter(Boolean)
+                    .map((tech) => (
+                      <Badge key={tech} variant="outline">
+                        {tech}
+                      </Badge>
+                    ))}
                 </div>
-                <dl className="flex gap-8">
-                  {p.metrics.map((m) => (
-                    <div key={m.label} className="flex flex-col gap-1">
-                      <dt className="order-2 text-xs text-muted-foreground">
-                        {m.label}
-                      </dt>
-                      <dd className="order-1 font-heading text-2xl font-semibold">
-                        {m.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
                 <div className="flex flex-wrap gap-2">
                   <Button
-                    render={<Link href="#contact" />}
+                    render={<Link href={`/work/${project.slug}`} />}
                     nativeButton={false}
                   >
                     View case study

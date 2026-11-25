@@ -7,6 +7,14 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
@@ -213,36 +221,38 @@ export function UserTable({
         <TableBody>
           {users.length === 0 && (
             <TableRow className="hover:bg-transparent">
-              <TableCell colSpan={4} className="px-4 py-12 text-center">
-                <div className="mx-auto flex max-w-xs flex-col items-center gap-3">
-                  <span className="inline-flex size-11 items-center justify-center rounded-full bg-muted">
-                    <Users className="size-5 text-muted-foreground" />
-                  </span>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-sm font-medium">
+              <TableCell colSpan={4} className="p-0">
+                <Empty className="py-12">
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <Users />
+                    </EmptyMedia>
+                    <EmptyTitle>
                       {activeCount > 0 ? "Tidak ada hasil" : "Belum ada pengguna"}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
+                    </EmptyTitle>
+                    <EmptyDescription>
                       {activeCount > 0
                         ? "Coba ubah atau reset filter."
                         : "Tambah akun role user pertama."}
-                    </p>
-                  </div>
-                  {activeCount > 0 ? (
+                    </EmptyDescription>
+                  </EmptyHeader>
+                  <EmptyContent className="flex-row justify-center">
+                    {activeCount > 0 ? (
                     <Button variant="outline" size="sm" onClick={resetAll}>
                       Reset filter
                     </Button>
                   ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      render={<Link href="/akun-pengguna/create" />}
-                      nativeButton={false}
-                    >
-                      Tambah pengguna
-                    </Button>
-                  )}
-                </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        render={<Link href="/akun-pengguna/create" />}
+                        nativeButton={false}
+                      >
+                        Tambah pengguna
+                      </Button>
+                    )}
+                  </EmptyContent>
+                </Empty>
               </TableCell>
             </TableRow>
           )}

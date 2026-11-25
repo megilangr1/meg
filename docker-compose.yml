@@ -28,11 +28,16 @@ services:
     ports:
       - "127.0.0.1:3001:3001"
     environment:
-      DATABASE_URL: "mysql://${DB_USER}:${DB_PASSWORD}@172.17.0.1:3306/${DB_NAME}"
+      DATABASE_URL: "mysql://${DB_USER}:***@172.17.0.1:3306/${DB_NAME}"
       BETTER_AUTH_URL: "https://meggi.chiro-it.site"
       BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET}"
+      UPLOAD_DIR: "/app/uploads"
       PORT: "3001"
       HOSTNAME: "0.0.0.0"
+    # uploads = data, bukan kode: bind mount ke host supaya file selamat saat rebuild
+    # dan gampang di-backup. uid container (nextjs 1001) == uid host heremes (1001).
+    volumes:
+      - ./uploads:/app/uploads
     networks: [meg]
 
 networks:

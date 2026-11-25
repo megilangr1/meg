@@ -8,6 +8,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const pageTitles = [
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/projects", label: "Projects" },
   { href: "/akun-pengguna", label: "Akun Pengguna" },
 ];
 

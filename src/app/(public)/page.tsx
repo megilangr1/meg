@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+// WorkSection membaca DB, jadi halaman ini ISR (bukan statis murni).
+export const revalidate = 60;
+
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
