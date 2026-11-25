@@ -150,7 +150,11 @@ Portfolio MeGGi dev. Fresh init, berkembang seiring fitur.
 - `magicuidesign-mcp` — `npx -y @magicuidesign/mcp@latest` — registry Magic UI
 - `better-auth` — `https://mcp.better-auth.com/mcp` (`type:remote`) — docs Better Auth versi akurat (`get_doc /llms.txt` → `search_docs` → `get_doc path`)
 
-## Skills (`.agents/skills/`, 20, sesuai `skills-lock.json`)
+## Skills (`.agents/skills/`, 24, sesuai `skills-lock.json`; tracked di commit `2e8efc8 AI Skills`)
+- `design-taste-frontend` — taste-skill anti-slop untuk landing/company page; dipakai saat redesign 2026-11-25 (layout, copy, typography, gate/checker di `scripts/`). Source `leonxlnx/taste-skill`.
+- `frontend-design` — panduan arah visual, tipografi, dan menghindari default template. Source `anthropics/skills`.
+- `vercel-react-best-practices` — performance React/Next.js: bundle, data fetching, rendering, hydration. Source `vercel-labs/agent-skills`.
+- `web-design-guidelines` — audit UI: aksesibilitas, hierarchy, responsive, interaksi. Source `vercel-labs/agent-skills`.
 - `shadcn` — kelola komponen shadcn
 - `migrate-radix-to-base` — migrasi Radix → Base UI
 - `next-dev-loop` — verifikasi runtime via `next dev` + browser
