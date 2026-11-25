@@ -10,6 +10,10 @@ npx prisma migrate reset
 
 npx prisma generate
 
+# To Generate Next.js Route Types (needed by `tsc` for `LayoutProps`)
+
+npx next typegen
+
 # To Init Dummy / 1st Admin Account
 
 npx auth@latest create-admin --email admin@example.com --name "Admin" --role admin

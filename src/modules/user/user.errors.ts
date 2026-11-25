@@ -1,4 +1,4 @@
-// Kode error dari `better-auth@1.7.5`:
+// Kode error dari `better-auth@1.7.28`:
 // `dist/api/routes/*.mjs` + `dist/plugins/admin/error-codes.mjs`.
 const USER_ERROR_MESSAGES: Record<string, string> = {
   USER_ALREADY_EXISTS: "Email sudah dipakai pengguna lain",

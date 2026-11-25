@@ -6,11 +6,11 @@
 
 **Full-stack Next.js developer. Clean UI, solid architecture, no bloat.**
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.3.5-black?logo=next.js)](https://nextjs.org)
+[![Next.js](https://img.shields.io/badge/Next.js-16.4.6-black?logo=next.js)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19.2.8-61DAFB?logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![Prisma](https://img.shields.io/badge/Prisma-7.10.0-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io)
+[![Prisma](https://img.shields.io/badge/Prisma-7.10.1-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io)
 [![Base UI](https://img.shields.io/badge/UI-Base_UI-black)](https://base-ui.com)
 
 [Stack](#-stack) · [Getting Started](#-getting-started) · [Structure](#-structure) · [Conventions](#-conventions) · [Roadmap](#-roadmap)
@@ -25,28 +25,30 @@ Portfolio site for **MeGGi dev**, built with the Next.js App Router. Three areas
 
 | Route | Area | Status |
 | --- | --- | --- |
-| `/` | Public landing — hero, stack, services, work, about | Live sections, content still placeholder |
+| `/` | Public landing — hero, stack, services, work, about, CTA | Live sections, content still placeholder |
+| `/work` | Public project list (`/work/<slug>` detail, gallery + lightbox) | Live, reads published projects from DB |
 | `/login` | Auth — split-screen with banner image | Email/password form + error map |
 | `/dashboard` | Private app — sidebar + header layout | Placeholder page |
 | `/akun-pengguna` | Admin CRUD for `role=user` accounts | List, create, detail, edit, ban/unban, delete |
+| `/projects` | Admin CRUD for projects + assets | List, create, detail, edit, publish, upload banner/gallery/pdf |
 
 Canonical URL: `siteConfig.url` (`NEXT_PUBLIC_APP_URL`, fallback `https://meggi.dev`).
 
 ## Stack
 
-- **Framework:** Next.js 16.3.5 (App Router), React 19.2.8, TypeScript strict
+- **Framework:** Next.js 16.4.6 (App Router), React 19.2.8, TypeScript strict
 - **Styling:** Tailwind CSS v4, `tw-animate-css`, shadcn style `base-nova` (neutral, CSS vars on)
 - **UI primitives:** `@base-ui/react`, `class-variance-authority`, `lucide-react`, `motion`
 - **Dark mode:** `next-themes` (class strategy, default `system`) + `ThemeToggle` (Light/Dark/System)
 - **Magic UI registry** (`@magicui`): `bento-grid`, `blur-fade`, `marquee`, `globe` (+ `cobe`)
 - **Fonts:** Outfit (`--font-sans`) + Geist / Geist Mono
-- **Database:** Prisma ORM 7.10.0 + `@prisma/adapter-mariadb`, provider `mysql` → MariaDB on XAMPP (`localhost:3306/meg`)
-- **Auth:** Better Auth 1.7.5 (email/password + admin plugin, Prisma adapter)
+- **Database:** Prisma ORM 7.10.1 + `@prisma/adapter-mariadb`, provider `mysql` (MySQL 8 / MariaDB at `localhost:3306/meg`)
+- **Auth:** Better Auth 1.7.28 (email/password + admin plugin, Prisma adapter)
 - **Brand assets:** `public/brand/logo*.png` (`*-clear.png` = transparent variant), favicons in `public/favicons/`, login banner in `public/image/login-banner.jpg`
 
 ## Getting Started
 
-Requirements: Node 20+, XAMPP MariaDB running on `localhost:3306` (or adjust env).
+Requirements: Node 20.9+, MySQL 8 / MariaDB running on `localhost:3306` (or adjust env).
 
 ```bash
 npm install
@@ -115,20 +117,24 @@ src/
     opengraph-image.tsx       # OG image (twitter-image re-export)
     (public)/
       layout.tsx              # SiteHeader + content + SiteFooter
-      page.tsx                # 5 sections + canonical + JSON-LD
+      page.tsx                # 6 sections + canonical + JSON-LD
+      work/                   # /work list + /work/[slug] detail
       _components/
         layout/               # site-header, site-sidebar (mobile Sheet), site-footer
-        page/                 # hero, stack-marquee, services, work, about
+        page/                 # hero, stack-marquee, services, work, about, cta
+        project-gallery.tsx   # public gallery + document downloads
     (auth)/
       login/page.tsx          # split-screen + form + theme toggle
       login/_components/      # login-form
     (private)/
       layout.tsx              # server session guard + sidebar/inset/header
-      loading.tsx             # skeleton
       dashboard/page.tsx      # /dashboard placeholder
       akun-pengguna/          # list/create/detail/edit + admin layout guard
+      projects/               # list/create/detail/edit + assets (admin only)
       _components/            # app-sidebar, app-header, sidebar/*
     api/auth/[...all]/route.ts # Better Auth gateway (toNextJsHandler)
+    api/projects/[id]/...     # asset + banner upload handlers (admin guard)
+    media/[...path]/route.ts  # serve uploads (Range + ?download=1)
   components/
     theme-provider.tsx        # next-themes wrapper
     shared/                   # logout-button, theme-toggle
@@ -142,10 +148,11 @@ src/
     site.ts                   # siteConfig for metadata/robots/sitemap/JSON-LD
     utils.ts                  # re-export cn
 prisma/
-  schema.prisma               # User/Session/Account/Verification (+ admin fields)
-  migrations/20260917034125_init_auth/
+  schema.prisma               # User/Session/Account/Verification (+ admin) + Project/ProjectAsset
+  migrations/                 # 20260917034125_init_auth → 20261106151656_add_projects → 20261106170613_drop_project_fact
   seed/                       # index.ts + auth.seed.ts (admin + test user)
   prisma.config.ts
+uploads/                      # uploaded media (gitignored, bind-mounted in Docker)
 ```
 
 Full internal notes: [`PROJECT.md`](./PROJECT.md)
@@ -165,6 +172,7 @@ Full internal notes: [`PROJECT.md`](./PROJECT.md)
 
 - [x] DB: models + migration + singleton + single env source (`DATABASE_URL`) + seed
 - [x] Auth: login form + error map, session guards (proxy + server layouts), admin CRUD
+- [x] Projects: admin CRUD + banner/gallery/pdf upload, public `/work` list + detail, sitemap, lightbox
 - [x] Finishing: dark mode, 404/error/loading, SEO (robots/sitemap/OG/JSON-LD), security headers
 - [x] Accessibility: axe 0 violations on `/`, `/login`, `/dashboard`, `/akun-pengguna`, 404 (desktop + mobile)
 - [ ] Dashboard: real content (still placeholder)
